@@ -1,14 +1,17 @@
 from model.model import Model
+import pandas as pd
 
 class FixedDose(Model):
-	def __init__(self):
-		pass
+	def __init__(self, bin_weekly_dose):
+		super().__init__(bin_weekly_dose)
+		self.feature_columns = []
 
-	def featurize_df(self):
-		pass
-
-	def prepare_XY(self, feat_df):
-		pass
+	def featurize(self, wf):
+		self.feat_df = pd.DataFrame()
+		self.feat_df["Weekly warfarin dose"] = wf.get_weekly_warfarin_dose()
+		if (self.bin_weekly_dose):
+			self.feat_df[self.out_column] = wf.get_binned_weekly_warfarin_dose()
 
 	def predict(self, x):
-		pass
+		assert(self.bin_weekly_dose)
+		return 1

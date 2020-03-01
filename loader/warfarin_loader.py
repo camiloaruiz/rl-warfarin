@@ -13,6 +13,19 @@ def get_enzyme_inducer_status_helper(row):
 
 	return enzyme_inducer_status
 
+def bin_weekly_dose_val(weekly_dose_val):
+	if weekly_dose_val == "na":
+		out = np.nan
+	elif weekly_dose_val < 21:
+		out = 0
+	elif 21 <= weekly_dose_val < 49:
+		out = 1
+	elif weekly_dose_val >= 49:
+		out = 2
+	else:
+		assert(False)
+	return out
+
 class WarfarinLoader():
 	def __init__(self, file_path = "data/warfarin.csv"):
 		self.file_path = file_path
@@ -86,4 +99,7 @@ class WarfarinLoader():
 		return self.binarize_feature("Amiodarone (Cordarone)", {0.:0, 1.:1., "na":np.nan})
 
 	def get_weekly_warfarin_dose(self):
-		return self.wf["Therapeutic Dose of Warfarin"]
+		return self.raw_df["Therapeutic Dose of Warfarin"]
+
+	def get_binned_weekly_warfarin_dose(self):
+		return self.raw_df["Therapeutic Dose of Warfarin"].apply(lambda weekly_dose_val: bin_weekly_dose_val(weekly_dose_val))

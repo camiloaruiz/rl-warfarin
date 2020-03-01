@@ -6,20 +6,23 @@ class Evaluation():
 		self.frac_incorrect = []
 		self.regret = []
 
-	def frac_incorrect(self, Y_hat, Y):
+	def get_frac_incorrect(self):
+		return self.frac_incorrect
+
+	def get_regret(self):
+		return self.regret
+
+	def calc_frac_incorrect(self, Y_hat, Y):
 		assert(len(Y_hat) == len(Y))
-		frac_incorrect = np.equal(Y_hat, Y)/float(len(Y))
+		frac_incorrect = np.sum(np.equal(Y_hat, Y))/float(len(Y))
 		self.frac_incorrect.append(frac_incorrect)
 
-	def regret(self):
+	def calc_regret(self):
 		raise NotImplementedError
 
-	def run(self, Y_hat, Y):
+	def evaluate(self, Y_hat, Y):
 		assert(Y_hat.shape == Y.shape)
 		if "frac_incorrect" in self.evaluation_metrics:
-			self.frac_incorrect(Y_hat, Y)
+			self.calc_frac_incorrect(Y_hat, Y)
 		if "regret" in self.evaluation_metrics:
-			self.regret()
-
-	def plot():
-		raise NotImplementedError
+			self.calc_regret()

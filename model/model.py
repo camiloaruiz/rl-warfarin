@@ -1,6 +1,10 @@
 class Model():
-	def __init__(self):
-		raise NotImplementedError
+	def __init__(self, bin_weekly_dose):
+		self.bin_weekly_dose = bin_weekly_dose
+		if (self.bin_weekly_dose):
+			self.out_column = "Binned weekly warfarin dose"
+		else:
+			self.out_column = "Weekly warfarin dose"
 
 	def get_X(self):
 		return self.X
@@ -14,8 +18,13 @@ class Model():
 	def set_Y(self, Y):
 		self.Y = Y
 
-	def prepare_XY(self, feat_df):
-		raise NotImplementedError
+	def remove_rows_with_missing_data(self):
+		self.feat_df = self.feat_df.dropna(axis = 'rows')
+
+	def prepare_XY(self):
+		self.remove_rows_with_missing_data()
+		self.set_X(self.feat_df[self.feature_columns].values)
+		self.set_Y(self.feat_df[self.out_column].values)
 
 	def predict(self, x):
 		raise NotImplementedError
