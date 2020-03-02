@@ -32,3 +32,4 @@ class WCDA(Model):
 			out = weekly_dose
 		else:
 			out = bin_weekly_dose_val(weekly_dose)
+		return out
