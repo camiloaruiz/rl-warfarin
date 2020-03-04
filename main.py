@@ -62,18 +62,15 @@ if __name__ == "__main__":
 		criterion = nn.MSELoss()
 		optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
     	for x, y, i in zip(X, Y, range(1, X.shape[0]+1)):
-    		# get the inputs; data is a list of [inputs, labels]
-	        inputs, labels = data
-
 	        # zero the parameter gradients
 	        optimizer.zero_grad()
 
 	        # forward + backward + optimize
-	        max, i = net(torch.tensor([x],dtype=torch.float),t)
+	        max_, i = net(torch.tensor([x],dtype=torch.float),t)
 	        if i == y:
-	        	loss = criterion(max, torch.tensor([0],dtype=torch.float))
+	        	loss = criterion(max_, torch.tensor([0],dtype=torch.float))
 	        else: 
-	        	loss = criterion(max, torch.tensor([-1],dtype=torch.float))
+	        	loss = criterion(max_, torch.tensor([-1],dtype=torch.float))
 	        loss.backward()
 	        optimizer.step()
 	        Y_hat = np.append(Y_hat, i)
