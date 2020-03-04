@@ -1,3 +1,4 @@
+
 class Model():
 	def __init__(self, bin_weekly_dose):
 		self.bin_weekly_dose = bin_weekly_dose
@@ -26,5 +27,5 @@ class Model():
 		self.set_X(self.feat_df[self.feature_columns].values)
 		self.set_Y(self.feat_df[self.out_column].values)
 
-	def predict(self, x):
+	def predict(self, x, **kw):
 		raise NotImplementedError
