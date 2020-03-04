@@ -6,6 +6,9 @@ from loader.warfarin_loader import WarfarinLoader
 from evaluation.evaluation import Evaluation
 import numpy as np
 
+from model.UCBLin import UCBNET
+import torch.optim as optim
+
 def str2bool(v):
     if isinstance(v, bool):
        return v
@@ -28,7 +31,8 @@ if __name__ == "__main__":
 
     # Get data
     wf = WarfarinLoader()
-    
+
+
     # Instantiate model
     if args.model == "fixed_dose":
         model = FixedDose(args.bin_weekly_dose)
@@ -49,8 +53,34 @@ if __name__ == "__main__":
     evaluation_obj = Evaluation(["frac_incorrect"])
     Y_hat = np.array([])
     for x, y, i in zip(X, Y, range(1, X.shape[0]+1)):
-        y_hat = model.predict(y)
+        y_hat = model.predict(x)
         Y_hat = np.append(Y_hat, y_hat)
         evaluation_obj.evaluate(Y_hat, Y[:i])
 
+    if False:
+		net = UCBNet(bin_weekly_dose=args.bin_weekly_dose, num_actions=3, dim=10, bound_constant=2)
+		criterion = nn.MSELoss()
+		optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
+    	for x, y, i in zip(X, Y, range(1, X.shape[0]+1)):
+    		# get the inputs; data is a list of [inputs, labels]
+	        inputs, labels = data
+
+	        # zero the parameter gradients
+	        optimizer.zero_grad()
+
+	        # forward + backward + optimize
+	        max, i = net(torch.tensor([x],dtype=torch.float),t)
+	        if i == y:
+	        	loss = criterion(max, torch.tensor([0],dtype=torch.float))
+	        else: 
+	        	loss = criterion(max, torch.tensor([-1],dtype=torch.float))
+	        loss.backward()
+	        optimizer.step()
+	        Y_hat = np.append(Y_hat, i)
+	        evaluation_obj.evaluate(Y_hat, Y[:i])
+
+
     print("frac_incorrect: " + str(evaluation_obj.get_frac_incorrect()[-1]))
+
+
+

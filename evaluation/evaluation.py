@@ -14,11 +14,13 @@ class Evaluation():
 
 	def calc_frac_incorrect(self, Y_hat, Y):
 		assert(len(Y_hat) == len(Y))
-		frac_incorrect = np.sum(np.equal(Y_hat, Y))/float(len(Y))
+		frac_incorrect = 1-np.sum(np.equal(Y_hat, Y))/float(len(Y))
 		self.frac_incorrect.append(frac_incorrect)
 
 	def calc_regret(self):
-		raise NotImplementedError
+		assert(len(Y_hat) == len(Y))
+		regret = np.sum(np.not_equal(Y_hat, Y))
+		self.regret.append(regret)
 
 	def evaluate(self, Y_hat, Y):
 		assert(Y_hat.shape == Y.shape)
