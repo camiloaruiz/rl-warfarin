@@ -58,7 +58,7 @@ if __name__ == "__main__":
         evaluation_obj.evaluate(Y_hat, Y[:i])
 
     if False:
-		net = UCBNet(bin_weekly_dose=args.bin_weekly_dose, num_actions=3, dim=10, bound_constant=2)
+		net = UCBNet(bin_weekly_dose=args.bin_weekly_dose, num_actions=3, bound_constant=2)
 		criterion = nn.MSELoss()
 		optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
     	for x, y, i in zip(X, Y, range(1, X.shape[0]+1)):

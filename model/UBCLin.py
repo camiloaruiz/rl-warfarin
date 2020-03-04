@@ -10,14 +10,14 @@ from loader.warfarin_loader import bin_weekly_dose_val
 
 
 class UCBNet(Module, Model):
-    def __init__(self, bin_weekly_dose, num_actions=3, dim=10, bound_constant=2):
+    def __init__(self, bin_weekly_dose, num_actions=3, bound_constant=2):
     	Module.__init__(self)
     	Model.__init__(self, bin_weekly_dose)
         self.feature_columns = ["Age in decades", "Height in cm", "Weight in kg", "VKORC1 A/G", "VKORC1 A/A", "VKORC1 genotype unknown", "CYP2C9 *1/*2", "CYP2C9 *1/*3", "CYP2C9*2/*2", "CYP2C9*2/*3", "CYP2C9 genotype unknown", "Asian race", "Black or African American", "Missing or Mixed race", "Enzyme inducer status", "Amiodarone status"]
 
+        self.dim = len(self.feature_columns) 
 
         self.num_actions = num_actions
-        self.dim = dim 
         self.counts = torch.zeros([self.num_actions], dtype=torch.float32,requires_grad=False)
 		self.register_buffer('a_counts', self.counts)
 
