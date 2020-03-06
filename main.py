@@ -24,7 +24,7 @@ import matplotlib.pyplot as plt
 def plot_combined(scalar_results):
 	points = defaultdict(list)
 	for run_results in scalar_results:
-		for step, value in run_results:
+		for step, value in enumerate(run_results):
 			points[step].append(value)
 	
 	xs = sorted(points.keys())
@@ -33,6 +33,7 @@ def plot_combined(scalar_results):
 	yerrs = stats.sem(values, axis=1)
 	plt.fill_between(xs, ys - yerrs, ys + yerrs, alpha=0.25)
 	plt.plot(xs, ys)
+	plt.show()
 	
 def plot_individually(run_results):
 	xs = [step for step, value in run_results]
@@ -74,7 +75,7 @@ def parse_args():
 	parser.add_argument('--R', type=float, nargs = "?", default=0.5)
 	parser.add_argument('--delta', type=float, nargs = "?", default=0.1)
 	parser.add_argument('--epsilon', type=float, nargs = "?", default=1.0/np.log(1000))
-	parser.add_argument('--num_trials', type=int, nargs = "?", default=1)
+	parser.add_argument('--num_trials', type=int, nargs = "?", default=30)
 
 
 	# These still need their corresponding use cases to be written 
@@ -123,10 +124,7 @@ if __name__ == "__main__":
 		all_frac_incorrect.append(model.calc_frac_incorrect(all_a_star_a_hat[trial]))
 		#all_regret.append(model.expected_regret(all_a_star_a_hat[tria]))
 
-	for frac_incorrect in all_frac_incorrect:
-		# plt.figure()
-		plt.plot(range(1,len(frac_incorrect)+1), frac_incorrect)
-		plt.show()
+	plot_combined(all_frac_incorrect)
 
 
 

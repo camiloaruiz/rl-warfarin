@@ -8,7 +8,7 @@ from loader.warfarin_loader import bin_weekly_dose_val
 class ThompsonDNet(Model):
 	def __init__(self, bin_weekly_dose, num_actions=3, R=0.5, delta=0.1, epsilon=1.0/np.log(1000), num_force=0.0):
 		super().__init__(bin_weekly_dose)
-		self.feature_columns = ["Age in decades", "Height in cm", "Weight in kg", "VKORC1 A/G", "VKORC1 A/A", "VKORC1 genotype unknown", "CYP2C9 *1/*2", "CYP2C9 *1/*3", "CYP2C9*2/*2", "CYP2C9*2/*3", "CYP2C9 genotype unknown", "Asian race", "Black or African American", "Missing or Mixed race", "Enzyme inducer status", "Amiodarone status"]
+		self.feature_columns = ["Age in decades", "Height in cm", "Weight in kg", "VKORC1 A/G", "VKORC1 A/A", "VKORC1 genotype unknown", "CYP2C9 *1/*2", "CYP2C9 *1/*3", "CYP2C9*2/*2", "CYP2C9*2/*3", "CYP2C9*3/*3", "CYP2C9 genotype unknown", "Asian race", "Black or African American", "Missing or Mixed race", "Enzyme inducer status", "Amiodarone status"]
 
 		self.dim = len(self.feature_columns) +1 
 		self.num_actions = num_actions
@@ -18,6 +18,7 @@ class ThompsonDNet(Model):
 		self.delta = delta
 		self.epsilon = epsilon
 		self.v2 = (self.R**2) * (24.0/self.epsilon) * self.dim * np.log(1.0/self.delta)
+		print("v**2: ", self.v2)
 		self.B = []
 		self.mu = []
 		self.f = []
@@ -50,6 +51,7 @@ class ThompsonDNet(Model):
 
 
 	def train(self, x, y, a):
+		x.astype(float)
 		self.B[a] += np.matmul(x, x.T) 
 		self.f[a] += self.reward(y, a)*x
 		self.mu[a] = np.matmul(np.linalg.inv(self.B[a]), self.f[a])
