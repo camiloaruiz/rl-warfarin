@@ -70,6 +70,7 @@ def parse_args():
 	parser.add_argument('--bin_weekly_dose', type=str2bool, nargs = "?", const=True)
 	parser.add_argument('--bound_constant', type=float, nargs = "?", default=2.0)
 	parser.add_argument('--num_force', type=int, nargs = "?", default=1)
+	parser.add_argument('--num_force_TH', type=int, nargs = "?", default=0)
 	parser.add_argument('--R', type=float, nargs = "?", default=0.5)
 	parser.add_argument('--delta', type=float, nargs = "?", default=0.1)
 	parser.add_argument('--epsilon', type=float, nargs = "?", default=1.0/np.log(1000))
@@ -100,13 +101,13 @@ if __name__ == "__main__":
 	elif args.model == "wcda":
 		model = WCDA(bin_weekly_dose=True)
 	elif args.model == "UCBNet":
-		model = UCBNet(bin_weekly_dose=True, num_actions=3, bound_constant=2.0, num_force=1.0)
+		model = UCBNet(bin_weekly_dose=True, num_actions=3, bound_constant=args.bound_constant, num_force=args.num_force)
 	elif args.model == "UCBDNet":
-		model = UCBDNet(bin_weekly_dose=True, num_actions=3, bound_constant=2.0, num_force=1.0)
+		model = UCBDNet(bin_weekly_dose=True, num_actions=3, bound_constant=args.bound_constant, num_force=args.num_force)
 	elif args.model == "ThompsonNet":
-		model = ThompsonNet(bin_weekly_dose=True, num_actions=3, R=0.5, delta=0.1, epsilon=1.0/np.log(1000), num_force=0.0)
+		model = ThompsonNet(bin_weekly_dose=True, num_actions=3, R=args.R, delta=0.1, epsilon=1.0/np.log(1000), num_force=args.num_force_TH)
 	elif args.model == "ThompsonDNet":
-		model = ThompsonDNet(bin_weekly_dose=True, num_actions=3, R=0.5, delta=0.1, epsilon=1.0/np.log(1000), num_force=0.0)
+		model = ThompsonDNet(bin_weekly_dose=True, num_actions=3, R=args.R, delta=0.1, epsilon=1.0/np.log(1000), num_force=args.num_force_TH)
 	else:
 		assert(False)
 	
