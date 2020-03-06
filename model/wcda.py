@@ -6,7 +6,6 @@ from loader.warfarin_loader import bin_weekly_dose_val
 class WCDA(Model):
 	def __init__(self, bin_weekly_dose):
 		super().__init__(bin_weekly_dose)
-		self.feature_columns = ["Age in decades", "Height in cm", "Weight in kg", "Asian race", "Black or African American", "Missing or Mixed race", "Enzyme inducer status", "Amiodarone status"]
 
 	def featurize(self, wf):
 		self.feat_df = pd.DataFrame()
@@ -33,3 +32,17 @@ class WCDA(Model):
 		else:
 			out = bin_weekly_dose_val(weekly_dose)
 		return out
+
+	def get_true_Beta(self):
+		raise NotImplementedError
+
+
+	def expected_regrit(self, a_star_a_hat):
+		if self.true_beta == None:
+			self.true_beta = self.get_true_Beta()
+ 
+		regret = []
+		for a_star, a_hat in astar_ahat:
+			raise NotImplementedError
+
+		return regret
