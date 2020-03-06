@@ -75,6 +75,11 @@ class Model():
 		for x, y in data:
 
 			if np.any(np.isin(x,np.nan)) or np.any(np.isin(y,np.nan)) or np.any(np.isin(x,'na')) or np.any(np.isin(y,'na')):
+
+				x = np.where(x==np.nan, 0, x) 
+				x = np.where(x=='na', 0, x) 
+				
+			if np.any(np.isin(y,np.nan)) or np.any(np.isin(y,'na')):
 				continue
 
 			a = self.predict(x,y)
