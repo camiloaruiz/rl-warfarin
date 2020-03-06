@@ -94,11 +94,11 @@ if __name__ == "__main__":
 
 	# Instantiate model
 	if args.model == "fixed_dose":
-		model = FixedDose(args.bin_weekly_dose)
+		model = FixedDose(bin_weekly_dose=True)
 	elif args.model == "wpda":
-		model = WPDA(args.bin_weekly_dose)
+		model = WPDA(bin_weekly_dose=True)
 	elif args.model == "wcda":
-		model = WCDA(args.bin_weekly_dose)
+		model = WCDA(bin_weekly_dose=True)
 	elif args.model == "UCBNet":
 		model = UCBNet(bin_weekly_dose=True, num_actions=3, bound_constant=2.0, num_force=1.0)
 	elif args.model == "UCBDNet":

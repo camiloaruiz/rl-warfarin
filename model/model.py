@@ -57,7 +57,7 @@ class Model():
 		frac_incorrect = []
 		a_star, a_hat = map(list, zip(*a_star_a_hat))
 		for i in range(1, len(a_star_a_hat)+1):
-			frac_incorrect.append(1.0-(np.sum(np.equal(a_star[:i], a_hat[:i]))/float(len(a_star_a_hat))))
+			frac_incorrect.append(1.0-(np.sum(np.equal(a_star[:i], a_hat[:i]))/float(i)))
 		return frac_incorrect
 
 

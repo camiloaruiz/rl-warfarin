@@ -6,6 +6,8 @@ from loader.warfarin_loader import bin_weekly_dose_val
 class WCDA(Model):
 	def __init__(self, bin_weekly_dose):
 		super().__init__(bin_weekly_dose)
+		self.feature_columns = ["Age in decades", "Height in cm", "Weight in kg", "Asian race", "Black or African American", "Missing or Mixed race", "Enzyme inducer status", "Amiodarone status"]
+
 
 	def featurize(self, wf):
 		self.feat_df = pd.DataFrame()
@@ -21,7 +23,7 @@ class WCDA(Model):
 		if (self.bin_weekly_dose):
 			self.feat_df[self.out_column] = wf.get_binned_weekly_warfarin_dose()
 
-	def predict(self, x):
+	def predict(self, x, y):
 		# Weekly dose
 		coef = np.array([-0.2546, 0.0118, 0.0134, -0.6752, 0.4060, 0.0443, 1.2799, -0.5695])
 		bias = 4.0376

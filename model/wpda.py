@@ -31,7 +31,7 @@ class WPDA(Model):
 		if (self.bin_weekly_dose):
 			self.feat_df[self.out_column] = wf.get_binned_weekly_warfarin_dose()
 
-	def predict(self, x):
+	def predict(self, x, y):
 		# Weekly dose
 		coef = np.array([-0.2614, 0.0087, 0.0128, -0.8677, -1.6974, -0.4854, -0.5211, -0.9357, -1.0616, -1.9206, -2.3312, -0.2188, -0.1092, -0.2760, -0.1032, 1.1816, -0.5503])
 		bias = 5.6044
