@@ -8,6 +8,7 @@ class WPDA(Model):
 		super().__init__(bin_weekly_dose)
 		self.feature_columns = ["Age in decades", "Height in cm", "Weight in kg", "VKORC1 A/G", "VKORC1 A/A", "VKORC1 genotype unknown", "CYP2C9 *1/*2", "CYP2C9 *1/*3", "CYP2C9*2/*2", "CYP2C9*2/*3", "CYP2C9*3/*3", "CYP2C9 genotype unknown", "Asian race", "Black or African American", "Missing or Mixed race", "Enzyme inducer status", "Amiodarone status"]
 
+	"""
 	def featurize(self, wf):
 		self.feat_df = pd.DataFrame()
 		self.feat_df["Age in decades"] = wf.get_age_in_decades()
@@ -30,6 +31,7 @@ class WPDA(Model):
 		self.feat_df["Weekly warfarin dose"] = wf.get_weekly_warfarin_dose()
 		if (self.bin_weekly_dose):
 			self.feat_df[self.out_column] = wf.get_binned_weekly_warfarin_dose()
+	"""
 
 	def predict(self, x, y):
 		# Weekly dose

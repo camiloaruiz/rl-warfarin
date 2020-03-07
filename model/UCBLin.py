@@ -8,7 +8,7 @@ from loader.warfarin_loader import bin_weekly_dose_val
 class UCBNet( Model):
 	def __init__(self, bin_weekly_dose, num_actions=3, bound_constant=2.0, num_force=1.0):
 		super().__init__(bin_weekly_dose)
-		self.feature_columns = ["Age in decades", "Height in cm", "Weight in kg", "VKORC1 A/G", "VKORC1 A/A", "VKORC1 genotype unknown", "CYP2C9 *1/*2", "CYP2C9 *1/*3", "CYP2C9*2/*2", "CYP2C9*2/*3", "CYP2C9*3/*3", "CYP2C9 genotype unknown", "Asian race", "Black or African American", "Missing or Mixed race", "Enzyme inducer status", "Amiodarone status"]
+		#self.feature_columns = ["Age in decades", "Height in cm", "Weight in kg", "VKORC1 A/G", "VKORC1 A/A", "VKORC1 genotype unknown", "CYP2C9 *1/*2", "CYP2C9 *1/*3", "CYP2C9*2/*2", "CYP2C9*2/*3", "CYP2C9*3/*3", "CYP2C9 genotype unknown", "Asian race", "Black or African American", "Missing or Mixed race", "Enzyme inducer status", "Amiodarone status"]
 
 		self.dim = len(self.feature_columns) 
 		self.num_actions = num_actions
@@ -68,6 +68,7 @@ class UCBNet( Model):
 
 		return regret
 
+	"""
 	def featurize_2(self, wf):
 		self.feat_df = pd.DataFrame()
 		self.feat_df["Age in decades"] = wf.get_age_in_decades()
@@ -105,5 +106,5 @@ class UCBNet( Model):
 		self.feat_df["Weekly warfarin dose"] = wf.get_weekly_warfarin_dose()
 		if (self.bin_weekly_dose):
 			self.feat_df[self.out_column] = wf.get_binned_weekly_warfarin_dose()
-
+	"""
 

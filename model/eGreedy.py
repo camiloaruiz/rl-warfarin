@@ -5,30 +5,36 @@ from loader.warfarin_loader import bin_weekly_dose_val
 
 
 
-class UCBDNet(Model):
-	def __init__(self, bin_weekly_dose, num_actions=3, bound_constant=2.0, num_force=1.0):
+class eGreedy( Model):
+	def __init__(self, bin_weekly_dose, e_0=0.1, num_actions=3, num_force=1.0):
 		super().__init__(bin_weekly_dose)
-		#self.feature_columns = ["Age in decades", "Height in cm", "Weight in kg", "VKORC1 A/G", "VKORC1 A/A", "VKORC1 genotype unknown", "CYP2C9 *1/*2", "CYP2C9 *1/*3", "CYP2C9*2/*2", "CYP2C9*2/*3", "CYP2C9*3/*3", "CYP2C9 genotype unknown", "Asian race", "Black or African American", "Missing or Mixed race", "Enzyme inducer status", "Amiodarone status"]
 
-		self.dim = len(self.feature_columns) +1
+
+		self.e = e_0    #epsilon in the epsilon greedy! must be in range[0,1]
+
+		self.dim = len(self.feature_columns)
 		self.num_actions = num_actions
-		self.bound_constant = bound_constant
+		#self.bound_constant = bound_constant
+		self.actions = np.identity(self.num_actions, dtype=float)
 		self.true_beta = None
-		self.A = []
-		self.b = []
+		self.A = np.identity(self.dim*self.num_actions, dtype=float)
+		self.b = np.zeros((self.dim*self.num_actions,1))
 		self.counts = np.zeros((self.num_actions))
-		self.num_force = num_force
-
-		for i in range(self.num_actions):
-			self.A.append(np.identity(self.dim, dtype=float))
-			self.b.append(np.zeros((self.dim,1)))
-
+		self.num_force = num_force		
+		
 
 	def predict(self, x, y):
-		x = np.append(x, 1.0) 
 		x.astype(float)
-		x = np.expand_dims(x, axis=1).astype(float)
 		y.astype(int)
+
+		if np.random.uniform() < self.e: #random case
+			a = np.random.choice(range(self.num_actions))
+			self.counts[a] += 1.0
+			self.train(x, y, a)
+			return a
+
+		#greedy case
+		theta = np.matmul(np.linalg.inv(self.A), self.b)
 		r_estimates = []
 		for a in range(self.num_actions):
 			if self.counts[a] < self.num_force:
@@ -36,16 +42,19 @@ class UCBDNet(Model):
 				self.train(x, y, a)
 				return a 
 
-			theta = np.matmul(np.linalg.inv(self.A[a]), self.b[a]) 
-			r_estimates.append(np.matmul(theta.T, x)+ self.bound_constant*np.sqrt(np.matmul(np.matmul(x.T,np.linalg.inv(self.A[a])), x)))
+			x_a = np.outer(self.actions[a], x).flatten()
+			x_a = np.expand_dims(x_a, axis=1).astype(float)
+			r_estimates.append(np.matmul(theta.T, x_a)) #+ self.bound_constant*np.sqrt(np.matmul(np.matmul(x_a.T,np.linalg.inv(self.A)), x_a)))
 		a = np.argmax(r_estimates)
 		self.train(x, y, a)
 		return a 
-
+			
 
 	def train(self, x, y, a):
-		self.A[a] += np.matmul(x, x.T) 
-		self.b[a] += self.reward(y, a)*x
+		x_a = np.outer(self.actions[a], x).flatten()
+		x_a = np.expand_dims(x_a, axis=1).astype(float)
+		self.A += np.matmul(x_a, x_a.T)
+		self.b += self.reward(y, a)*x_a
 
 
 	def reward(self, y, a):
@@ -69,7 +78,25 @@ class UCBDNet(Model):
 
 		return regret
 
+
+
+
 	"""
+	def featurize_2(self, wf):
+		self.feat_df = pd.DataFrame()
+		self.feat_df["Age in decades"] = wf.get_age_in_decades()
+		self.feat_df["Height in cm"] = wf.get_height_in_cm()
+		self.feat_df["Weight in kg"] = wf.get_weight_in_kg()
+		self.feat_df["Asian race"] = wf.get_asian_race()
+		self.feat_df["Black or African American"] = wf.get_black_or_african_american()
+		self.feat_df["Missing or Mixed race"] = wf.get_missing_or_mixed_race()
+		self.feat_df["Enzyme inducer status"] = wf.get_enzyme_inducer_status()
+		self.feat_df["Amiodarone status"] = wf.get_amiodarone_status()
+		self.feat_df["Weekly warfarin dose"] = wf.get_weekly_warfarin_dose()
+		if (self.bin_weekly_dose):
+			self.feat_df[self.out_column] = wf.get_binned_weekly_warfarin_dose()
+
+
 	def featurize(self, wf):
 		self.feat_df = pd.DataFrame()
 		self.feat_df["Age in decades"] = wf.get_age_in_decades()
@@ -92,5 +119,5 @@ class UCBDNet(Model):
 		self.feat_df["Weekly warfarin dose"] = wf.get_weekly_warfarin_dose()
 		if (self.bin_weekly_dose):
 			self.feat_df[self.out_column] = wf.get_binned_weekly_warfarin_dose()
-
 	"""
+
