@@ -12,6 +12,21 @@ class FixedDose(Model):
 		if (self.bin_weekly_dose):
 			self.feat_df[self.out_column] = wf.get_binned_weekly_warfarin_dose()
 
-	def predict(self, x):
+	def predict(self, x, y):
 		assert(self.bin_weekly_dose)
 		return 1
+
+
+	def get_true_Beta(self):
+		raise NotImplementedError
+
+
+	def expected_regrit(self, a_star_a_hat):
+		if self.true_beta == None:
+			self.true_beta = self.get_true_Beta()
+ 
+		regret = []
+		for a_star, a_hat in astar_ahat:
+			raise NotImplementedError
+
+		return regret

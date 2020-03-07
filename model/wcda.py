@@ -8,6 +8,7 @@ class WCDA(Model):
 		super().__init__(bin_weekly_dose)
 		self.feature_columns = ["Age in decades", "Height in cm", "Weight in kg", "Asian race", "Black or African American", "Missing or Mixed race", "Enzyme inducer status", "Amiodarone status"]
 
+
 	def featurize(self, wf):
 		self.feat_df = pd.DataFrame()
 		self.feat_df["Age in decades"] = wf.get_age_in_decades()
@@ -22,7 +23,7 @@ class WCDA(Model):
 		if (self.bin_weekly_dose):
 			self.feat_df[self.out_column] = wf.get_binned_weekly_warfarin_dose()
 
-	def predict(self, x):
+	def predict(self, x, y):
 		# Weekly dose
 		coef = np.array([-0.2546, 0.0118, 0.0134, -0.6752, 0.4060, 0.0443, 1.2799, -0.5695])
 		bias = 4.0376
@@ -33,3 +34,17 @@ class WCDA(Model):
 		else:
 			out = bin_weekly_dose_val(weekly_dose)
 		return out
+
+	def get_true_Beta(self):
+		raise NotImplementedError
+
+
+	def expected_regrit(self, a_star_a_hat):
+		if self.true_beta == None:
+			self.true_beta = self.get_true_Beta()
+ 
+		regret = []
+		for a_star, a_hat in astar_ahat:
+			raise NotImplementedError
+
+		return regret

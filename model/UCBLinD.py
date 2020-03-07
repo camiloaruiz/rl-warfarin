@@ -1,12 +1,74 @@
+import numpy as np
 from model.model import Model
 import pandas as pd
-import numpy as np
 from loader.warfarin_loader import bin_weekly_dose_val
 
-class WPDA(Model):
-	def __init__(self, bin_weekly_dose):
+
+
+class UCBDNet(Model):
+	def __init__(self, bin_weekly_dose, num_actions=3, bound_constant=2.0, num_force=1.0):
 		super().__init__(bin_weekly_dose)
 		self.feature_columns = ["Age in decades", "Height in cm", "Weight in kg", "VKORC1 A/G", "VKORC1 A/A", "VKORC1 genotype unknown", "CYP2C9 *1/*2", "CYP2C9 *1/*3", "CYP2C9*2/*2", "CYP2C9*2/*3", "CYP2C9*3/*3", "CYP2C9 genotype unknown", "Asian race", "Black or African American", "Missing or Mixed race", "Enzyme inducer status", "Amiodarone status"]
+
+		self.dim = len(self.feature_columns) +1
+		self.num_actions = num_actions
+		self.bound_constant = bound_constant
+		self.true_beta = None
+		self.A = []
+		self.b = []
+		self.counts = np.zeros((self.num_actions))
+		self.num_force = num_force
+
+		for i in range(self.num_actions):
+			self.A.append(np.identity(self.dim, dtype=float))
+			self.b.append(np.zeros((self.dim,1)))
+
+
+	def predict(self, x, y):
+		x = np.append(x, 1.0) 
+		x.astype(float)
+		x = np.expand_dims(x, axis=1).astype(float)
+		y.astype(int)
+		r_estimates = []
+		for a in range(self.num_actions):
+			if self.counts[a] < self.num_force:
+				self.counts[a] += 1.0
+				self.train(x, y, a)
+				return a 
+
+			theta = np.matmul(np.linalg.inv(self.A[a]), self.b[a]) 
+			r_estimates.append(np.matmul(theta.T, x)+ self.bound_constant*np.sqrt(np.matmul(np.matmul(x.T,np.linalg.inv(self.A[a])), x)))
+		a = np.argmax(r_estimates)
+		self.train(x, y, a)
+		return a 
+
+
+	def train(self, x, y, a):
+		self.A[a] += np.matmul(x, x.T) 
+		self.b[a] += self.reward(y, a)*x
+
+
+	def reward(self, y, a):
+		if y == a:
+			return 0.0
+		else:
+			return -1.0
+
+
+	def get_true_Beta(self):
+		raise NotImplementedError
+
+
+	def expected_regrit(self, a_star_a_hat):
+		if self.true_beta == None:
+			self.true_beta = self.get_true_Beta()
+ 
+		regret = []
+		for a_star, a_hat in astar_ahat:
+			raise NotImplementedError
+
+		return regret
+
 
 	def featurize(self, wf):
 		self.feat_df = pd.DataFrame()
@@ -31,29 +93,4 @@ class WPDA(Model):
 		if (self.bin_weekly_dose):
 			self.feat_df[self.out_column] = wf.get_binned_weekly_warfarin_dose()
 
-	def predict(self, x, y):
-		# Weekly dose
-		coef = np.array([-0.2614, 0.0087, 0.0128, -0.8677, -1.6974, -0.4854, -0.5211, -0.9357, -1.0616, -1.9206, -2.3312, -0.2188, -0.1092, -0.2760, -0.1032, 1.1816, -0.5503])
-		bias = 5.6044
-		weekly_dose = (np.sum(coef*x) + bias)**2.0
 
-		if not(self.bin_weekly_dose):
-			out = weekly_dose
-		else:
-			out = bin_weekly_dose_val(weekly_dose)
-		return out
-
-
-	def get_true_Beta(self):
-		raise NotImplementedError
-
-
-	def expected_regrit(self, a_star_a_hat):
-		if self.true_beta == None:
-			self.true_beta = self.get_true_Beta()
- 
-		regret = []
-		for a_star, a_hat in astar_ahat:
-			raise NotImplementedError
-
-		return regret

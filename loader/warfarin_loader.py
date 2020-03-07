@@ -6,7 +6,7 @@ def get_enzyme_inducer_status_helper(row):
 	phenytoin = row["Phenytoin (Dilantin)"]
 	rifampin = row["Rifampin or Rifampicin"]
 
-	if (pd.isnull(carbamazepine) or pd.isnull(phenytoin) or pd.isnull(rifampin)):
+	if ((carbamazepine == "na") or (phenytoin == "na") or (rifampin == "na")):
 		enzyme_inducer_status = np.nan
 	else:
 		enzyme_inducer_status = carbamazepine or phenytoin or rifampin
