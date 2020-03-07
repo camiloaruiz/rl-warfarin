@@ -18,9 +18,9 @@ def bin_weekly_dose_val(weekly_dose_val):
 		out = np.nan
 	elif weekly_dose_val < 21:
 		out = 0
-	elif 21 <= weekly_dose_val < 49:
+        elif 21 <= weekly_dose_val <= 49:
 		out = 1
-	elif weekly_dose_val >= 49:
+        elif weekly_dose_val > 49:
 		out = 2
 	else:
 		assert(False)
