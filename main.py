@@ -76,7 +76,7 @@ def parse_args():
 	parser.add_argument('--R', type=float, nargs = "?", default=0.5)
 	parser.add_argument('--delta', type=float, nargs = "?", default=0.1)
 	parser.add_argument('--epsilon', type=float, nargs = "?", default=1.0/np.log(1000))
-	parser.add_argument('--num_trials', type=int, nargs = "?", default=20)
+	parser.add_argument('--num_trials', type=int, nargs = "?", default=30)
 	parser.add_argument('--e_0', type=float, nargs = "?", default=0.1)
 
 
@@ -93,7 +93,7 @@ if __name__ == "__main__":
 	args = parse_args()
 
 	# Get data
-	wf = WarfarinLoader()
+	wf = WarfarinLoader(na_val=np.nan,fill_na_mean=False,stable_dose_only=False)
 
 
 	# Instantiate model
@@ -127,12 +127,17 @@ if __name__ == "__main__":
 	for trial in range(args.num_trials):
 		all_a_star_a_hat.append(model.experiment(rand_seed = trial))
 		frac_incorrect = model.calc_final_frac_incorrect(all_a_star_a_hat[-1])
-		if trial==0: print(args.model,"Frac Incorrect= ",frac_incorrect)
+		#if trial==0: print(args.model,"Frac Incorrect= ",frac_incorrect)
 		all_frac_incorrect.append(model.calc_frac_incorrect(all_a_star_a_hat[trial]))
-		all_regret.append(model.regret_over_time(all_a_star_a_hat[trial]))
+		#all_regret.append(model.regret_over_time(all_a_star_a_hat[trial]))
+	print (args.model, "Averaged Frac Incorrect: ", np.mean(all_frac_incorrect))
 
-	np.save("data/"+ args.model+"_regret",all_regret)
-	np.save("data/"+ args.model+"_frac_incorrect",all_frac_incorrect)
+
+
+
+	#Code for adams plotting functions
+	#np.save("data/"+ args.model+"_regret",all_regret)
+	#np.save("data/"+ args.model+"_frac_incorrect",all_frac_incorrect)
 
 	#plot_combined(all_frac_incorrect)
 
