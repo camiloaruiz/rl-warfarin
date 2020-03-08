@@ -17,7 +17,8 @@ import scipy.stats as stats
 import matplotlib; matplotlib.use('TkAgg')
 #import matplotlib; matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
 
@@ -93,7 +94,7 @@ if __name__ == "__main__":
 	args = parse_args()
 
 	# Get data
-	wf = WarfarinLoader(na_val=np.nan,fill_na_mean=False,stable_dose_only=False)
+	wf = WarfarinLoader(na_val=np.nan,fill_na_mean=False,stable_dose_only=True)
 
 
 	# Instantiate model

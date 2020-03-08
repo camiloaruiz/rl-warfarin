@@ -11,9 +11,9 @@ class testModel( Model):
 		self.feature_columns = ["is Male","is Female","unknown Gender","Age in decades", "Height in cm", "Weight in kg",
 		"Diabetes","Valve replacement","Congestive Heart Failure","Aspirin","Simvastatin","Smoker",
 		"VKORC1_497_GT","VKORC1_497_TT","VKORC1_497_GG","VKORC1_497_unknown",
-		"VKORC1_1542_CC","VKORC1_1542_CG","VKORC1_1542_NA",
+		"VKORC1_1542_CC","VKORC1_1542_CG","VKORC1_1542_GG","VKORC1_1542_NA",
 		"VKORC1_4451_CC","VKORC1_4451_AC","VKORC1_4451_AA","VKORC1_4451_NA",
-		"VKORC1 A/G", "VKORC1 A/A", "VKORC1 genotype unknown",
+		"VKORC1 A/G", "VKORC1 A/A", "VKORC1 G/G","VKORC1 genotype unknown",
 		"CYP2C9 *1/*1","CYP2C9 *1/*2", "CYP2C9 *1/*3", "CYP2C9*2/*2", "CYP2C9*2/*3","CYP2C9*3/*3", "CYP2C9 genotype unknown",
 		"Asian race", "Black or African American", "Missing or Mixed race","White race",
 		"Enzyme inducer status", "Amiodarone status"]
@@ -52,6 +52,7 @@ class testModel( Model):
 
 		self.feat_df["VKORC1_1542_CC"] = wf.get_VKORC1_1542_CC()
 		self.feat_df["VKORC1_1542_CG"] = wf.get_VKORC1_1542_CG()
+		self.feat_df["VKORC1_1542_GG"] = wf.get_VKORC1_1542_GG()
 		self.feat_df["VKORC1_1542_NA"] = wf.get_VKORC1_1542_NA()
 
 		self.feat_df["VKORC1_4451_CC"] = wf.get_VKORC1_4451_CC()
@@ -62,6 +63,7 @@ class testModel( Model):
 
 		self.feat_df["VKORC1 A/G"] = wf.get_VKORC1_AG()
 		self.feat_df["VKORC1 A/A"] = wf.get_VKORC1_AA()
+		self.feat_df["VKORC1 G/G"] = wf.get_VKORC1_GG()
 		self.feat_df["VKORC1 genotype unknown"] = wf.get_VKORC1_genotype_unknown()
 
 		self.feat_df["CYP2C9 *1/*1"] = wf.get_CYP2C9_11()

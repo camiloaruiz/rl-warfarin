@@ -153,6 +153,9 @@ class WarfarinLoader():
 	def get_VKORC1_AA(self):
 		return self.binarize_feature("VKORC1 -1639 consensus", {"A/G": 0, "A/A": 1, "G/G": 0, "na": self.na_val})
 
+	def get_VKORC1_GG(self):
+		return self.binarize_feature("VKORC1 -1639 consensus", {"A/G": 0, "A/A": 0, "G/G": 1, "na": self.na_val})
+
 	def get_VKORC1_genotype_unknown(self):
 		return self.binarize_feature("VKORC1 -1639 consensus", {"A/G": 0, "A/A": 0, "G/G": 0, "na": 1})
 

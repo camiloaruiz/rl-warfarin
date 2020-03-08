@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Get data
-wf = WarfarinLoader()
+wf = WarfarinLoader(na_val=np.nan,fill_na_mean=False,stable_dose_only=True)
 model = testModel(True)
 
 # Prepare data
@@ -23,6 +23,7 @@ model.featurize(wf)
 model.prepare_XY()
 X = model.get_X()
 y = model.get_Y()
+y = model.get_y_for_action(1,y)
 print(X.shape)
 #print(X[0])
 X = pd.DataFrame(data=X,columns=model.feature_columns)

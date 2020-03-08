@@ -12,9 +12,9 @@ class Model():
 			self.out_column = "Weekly warfarin dose"
 
 		# these are features sorted by importance from running feature_selection.py
-		#self.feature_columns = ['Weight in kg', 'VKORC1_1542_CC', 'VKORC1 A/A', 'Asian race', 'Height in cm', 'Black or African American', 'Smoker', 'Age in decades', 'CYP2C9 *1/*3', 'VKORC1_497_TT', 'White race', 'Enzyme inducer status', 'VKORC1 A/G', 'VKORC1_1542_CG', 'CYP2C9*2/*3', 'VKORC1_497_GG', 'Diabetes', 'VKORC1_1542_NA', 'Aspirin', 'VKORC1 genotype unknown', 'VKORC1_4451_CC', 'CYP2C9 *1/*2', 'VKORC1_4451_AC', 'Simvastatin', 'VKORC1_497_unknown', 'VKORC1_4451_AA', 'Amiodarone status', 'Congestive Heart Failure', 'CYP2C9 *1/*1', 'VKORC1_4451_NA', 'VKORC1_497_GT', 'Valve replacement', 'CYP2C9*3/*3', 'is Female', 'Missing or Mixed race', 'is Male', 'CYP2C9*2/*2', 'unknown Gender', 'CYP2C9 genotype unknown']
+		self.feature_columns = ['Weight in kg', 'VKORC1_1542_CC', 'VKORC1 A/A', 'Asian race', 'Height in cm', 'Black or African American', 'Smoker', 'Age in decades', 'CYP2C9 *1/*3', 'VKORC1_497_TT', 'White race', 'Enzyme inducer status', 'VKORC1 A/G', 'VKORC1_1542_CG', 'CYP2C9*2/*3', 'VKORC1_497_GG', 'Diabetes', 'VKORC1_1542_NA', 'Aspirin', 'VKORC1 genotype unknown', 'VKORC1_4451_CC', 'CYP2C9 *1/*2', 'VKORC1_4451_AC', 'Simvastatin', 'VKORC1_497_unknown', 'VKORC1_4451_AA', 'Amiodarone status', 'Congestive Heart Failure', 'CYP2C9 *1/*1', 'VKORC1_4451_NA', 'VKORC1_497_GT', 'Valve replacement', 'CYP2C9*3/*3', 'is Female', 'Missing or Mixed race', 'is Male', 'CYP2C9*2/*2', 'unknown Gender', 'CYP2C9 genotype unknown']
 		#self.feature_columns = self.feature_columns[:n_features]
-		self.feature_columns = ["Age in decades", "Height in cm", "Weight in kg", "VKORC1 A/G", "VKORC1 A/A", "VKORC1 genotype unknown", "CYP2C9 *1/*2", "CYP2C9 *1/*3", "CYP2C9*2/*2", "CYP2C9*2/*3", "CYP2C9*3/*3", "CYP2C9 genotype unknown", "Asian race", "Black or African American", "Missing or Mixed race", "Enzyme inducer status", "Amiodarone status"]
+		#self.feature_columns = ["Age in decades", "Height in cm", "Weight in kg", "VKORC1 A/G", "VKORC1 A/A", "VKORC1 genotype unknown", "CYP2C9 *1/*2", "CYP2C9 *1/*3", "CYP2C9*2/*2", "CYP2C9*2/*3", "CYP2C9*3/*3", "CYP2C9 genotype unknown", "Asian race", "Black or African American", "Missing or Mixed race", "Enzyme inducer status", "Amiodarone status"]
 
 
 
@@ -52,8 +52,18 @@ class Model():
 		raise NotImplementedError
 
 
-	def get_true_Beta(self):
-		raise NotImplementedError
+	# y is the binned y value of 0,1,2,etc
+	def get_y_for_action(self,a,y):
+		return (a==y).astype(float)
+
+	#returns list of true betas
+	def get_true_Beta(self,X,y):
+		betas = []
+		for a in self.num_actions:
+			y_a = self.get_y_for_action(self,a,y)
+			beta = numpy.linalg.lstsq(X,y_a)[0]
+			betas.append(beta)
+		return np.array(betas)
 
 
 	def expected_regrit(self, a_star_a_hat):
@@ -139,6 +149,7 @@ class Model():
 
 		self.feat_df["VKORC1_1542_CC"] = wf.get_VKORC1_1542_CC()
 		self.feat_df["VKORC1_1542_CG"] = wf.get_VKORC1_1542_CG()
+		self.feat_df["VKORC1_1542_GG"] = wf.get_VKORC1_1542_GG()
 		self.feat_df["VKORC1_1542_NA"] = wf.get_VKORC1_1542_NA()
 
 		self.feat_df["VKORC1_4451_CC"] = wf.get_VKORC1_4451_CC()
