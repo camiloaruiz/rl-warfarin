@@ -11,6 +11,8 @@ class Model():
 		else:
 			self.out_column = "Weekly warfarin dose"
 
+		self.num_actions = 3
+
 		# these are features sorted by importance from running feature_selection.py
 		self.feature_columns = ['Weight in kg', 'VKORC1_1542_CC', 'VKORC1 A/A', 'Asian race', 'Height in cm', 'Black or African American', 'Smoker', 'Age in decades', 'CYP2C9 *1/*3', 'VKORC1_497_TT', 'White race', 'Enzyme inducer status', 'VKORC1 A/G', 'VKORC1_1542_CG', 'CYP2C9*2/*3', 'VKORC1_497_GG', 'Diabetes', 'VKORC1_1542_NA', 'Aspirin', 'VKORC1 genotype unknown', 'VKORC1_4451_CC', 'CYP2C9 *1/*2', 'VKORC1_4451_AC', 'Simvastatin', 'VKORC1_497_unknown', 'VKORC1_4451_AA', 'Amiodarone status', 'Congestive Heart Failure', 'CYP2C9 *1/*1', 'VKORC1_4451_NA', 'VKORC1_497_GT', 'Valve replacement', 'CYP2C9*3/*3', 'is Female', 'Missing or Mixed race', 'is Male', 'CYP2C9*2/*2', 'unknown Gender', 'CYP2C9 genotype unknown']
 		#self.feature_columns = self.feature_columns[:n_features]
@@ -54,20 +56,52 @@ class Model():
 
 	# y is the binned y value of 0,1,2,etc
 	def get_y_for_action(self,a,y):
-		return (a==y).astype(float)
+		return (a==y).astype(float) - 1
 
 	#returns list of true betas
-	def get_true_Beta(self,X,y):
+	def get_true_Beta(self):
+		X = self.X
+		Y = self.Y
 		betas = []
-		for a in self.num_actions:
-			y_a = self.get_y_for_action(self,a,y)
-			beta = numpy.linalg.lstsq(X,y_a)[0]
+		for a in range(self.num_actions):
+			y_a = self.get_y_for_action(a,Y)
+			#print(X,y_a)
+			beta = np.linalg.lstsq(X,y_a)[0]
 			betas.append(beta)
+
+		#testing to see if they work
+		"""
+		incorrect = []
+		num_incorrect = 0
+		count = 0
+		for i in range(len(Y)):
+			x,y = X[i],Y[i]
+			a = np.argmax([np.dot(x, betas[j]) for j in range(self.num_actions)])
+			#print(a,[np.dot(x, betas[j]) for j in range(self.num_actions)])
+			if a != y:
+				print(a,y,[np.dot(x, betas[j]) for j in range(self.num_actions)])
+				incorrect.append(0 - np.dot(x, betas[int(a)]))
+				num_incorrect += 1
+			count +=1
+		print(np.mean(incorrect))
+		print("True beta score: ", num_incorrect/count)
+		"""
+		#exit()
+
 		return np.array(betas)
 
 
-	def expected_regrit(self, a_star_a_hat):
-		raise NotImplementedError
+	def expected_regret(self, a_star_a_hat):
+		betas = self.get_true_Beta()
+		regret_step = []
+
+		for i, (a_star, a_hat) in enumerate(a_star_a_hat):
+
+			r = np.dot(self.X[i],betas[int(a_star)]) - np.dot(self.X[i],betas[int(a_hat)])
+			regret_step.append(r)
+		print("Final Regret", np.cumsum(regret_step)[-1])
+		return np.cumsum(regret_step)
+
 
 	def regret_over_time(self, a_star_a_hat):
 		frac_incorrect = []

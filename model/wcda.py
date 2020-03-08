@@ -35,16 +35,3 @@ class WCDA(Model):
 			out = bin_weekly_dose_val(weekly_dose)
 		return out
 
-	def get_true_Beta(self):
-		raise NotImplementedError
-
-
-	def expected_regrit(self, a_star_a_hat):
-		if self.true_beta == None:
-			self.true_beta = self.get_true_Beta()
- 
-		regret = []
-		for a_star, a_hat in astar_ahat:
-			raise NotImplementedError
-
-		return regret

@@ -1,7 +1,7 @@
 #!/bin/bash
 
-#python main.py --model fixed_dose
-python main.py --model wcda
-python main.py --model wpda
-python main.py --model UCBNet
-python main.py --model ThompsonNet --R 0.005
+python main.py --model fixed_dose
+#python main.py --model wcda
+#python main.py --model wpda
+#python main.py --model UCBNet
+#python main.py --model ThompsonNet --R 0.005

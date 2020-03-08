@@ -64,19 +64,6 @@ class eGreedy( Model):
 			return -1.0
 
 
-	def get_true_Beta(self):
-		raise NotImplementedError
-
-
-	def expected_regrit(self, a_star_a_hat):
-		if self.true_beta == None:
-			self.true_beta = self.get_true_Beta()
- 
-		regret = []
-		for a_star, a_hat in astar_ahat:
-			raise NotImplementedError
-
-		return regret
 
 
 

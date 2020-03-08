@@ -130,15 +130,16 @@ if __name__ == "__main__":
 		frac_incorrect = model.calc_final_frac_incorrect(all_a_star_a_hat[-1])
 		#if trial==0: print(args.model,"Frac Incorrect= ",frac_incorrect)
 		all_frac_incorrect.append(model.calc_frac_incorrect(all_a_star_a_hat[trial]))
-		#all_regret.append(model.regret_over_time(all_a_star_a_hat[trial]))
+		all_regret.append(model.expected_regret(all_a_star_a_hat[trial]))
 	print (args.model, "Averaged Frac Incorrect: ", np.mean(all_frac_incorrect))
 
 
 
 
 	#Code for adams plotting functions
-	#np.save("data/"+ args.model+"_regret",all_regret)
-	#np.save("data/"+ args.model+"_frac_incorrect",all_frac_incorrect)
+	np.save("data/"+ args.model+"_a_star_a_hat",all_a_star_a_hat)
+	np.save("data/"+ args.model+"_regret",all_regret)
+	np.save("data/"+ args.model+"_frac_incorrect",all_frac_incorrect)
 
 	#plot_combined(all_frac_incorrect)
 
