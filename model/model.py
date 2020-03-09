@@ -4,7 +4,7 @@ import pandas as pd
 
 
 class Model():
-	def __init__(self, bin_weekly_dose, n_features=10):
+	def __init__(self, bin_weekly_dose, n_features=20):
 		self.bin_weekly_dose = bin_weekly_dose
 		if (self.bin_weekly_dose):
 			self.out_column = "Binned weekly warfarin dose"
@@ -14,8 +14,16 @@ class Model():
 		self.num_actions = 3
 
 		# these are features sorted by importance from running feature_selection.py
-		self.feature_columns = ['Weight in kg', 'VKORC1_1542_CC', 'VKORC1 A/A', 'Asian race', 'Height in cm', 'Black or African American', 'Smoker', 'Age in decades', 'CYP2C9 *1/*3', 'VKORC1_497_TT', 'White race', 'Enzyme inducer status', 'VKORC1 A/G', 'VKORC1_1542_CG', 'CYP2C9*2/*3', 'VKORC1_497_GG', 'Diabetes', 'VKORC1_1542_NA', 'Aspirin', 'VKORC1 genotype unknown', 'VKORC1_4451_CC', 'CYP2C9 *1/*2', 'VKORC1_4451_AC', 'Simvastatin', 'VKORC1_497_unknown', 'VKORC1_4451_AA', 'Amiodarone status', 'Congestive Heart Failure', 'CYP2C9 *1/*1', 'VKORC1_4451_NA', 'VKORC1_497_GT', 'Valve replacement', 'CYP2C9*3/*3', 'is Female', 'Missing or Mixed race', 'is Male', 'CYP2C9*2/*2', 'unknown Gender', 'CYP2C9 genotype unknown']
+		#self.feature_columns = ['Weight in kg', 'VKORC1_1542_CC', 'VKORC1 A/A', 'Asian race', 'Height in cm', 'Black or African American', 'Smoker', 'Age in decades', 'CYP2C9 *1/*3', 'VKORC1_497_TT', 'White race', 'Enzyme inducer status', 'VKORC1 A/G', 'VKORC1_1542_CG', 'CYP2C9*2/*3', 'VKORC1_497_GG', 'Diabetes', 'VKORC1_1542_NA', 'Aspirin', 'VKORC1 genotype unknown', 'VKORC1_4451_CC', 'CYP2C9 *1/*2', 'VKORC1_4451_AC', 'Simvastatin', 'VKORC1_497_unknown', 'VKORC1_4451_AA', 'Amiodarone status', 'Congestive Heart Failure', 'CYP2C9 *1/*1', 'VKORC1_4451_NA', 'VKORC1_497_GT', 'Valve replacement', 'CYP2C9*3/*3', 'is Female', 'Missing or Mixed race', 'is Male', 'CYP2C9*2/*2', 'unknown Gender', 'CYP2C9 genotype unknown']
+		
+		
+		#correlation with rewards instead
+		self.feature_columns = ['Weight in kg', 'VKORC1 A/G', 'Enzyme inducer status', 'Black or African American', 'VKORC1 G/G', 'VKORC1_497_GT', 'Age in decades', 'CYP2C9 *1/*2', 'Missing or Mixed race', 'VKORC1_1542_CG', 'VKORC1_1542_GG', 'Amiodarone status', 'White race', 'Congestive Heart Failure', 'CYP2C9 *1/*3', 'CYP2C9*2/*3', 'VKORC1_497_GG', 'VKORC1_497_TT', 'Smoker', 'Diabetes', 'VKORC1 A/A', 'Asian race', 'Aspirin', 'CYP2C9 *1/*1', 'Valve replacement', 'CYP2C9*3/*3', 'VKORC1_4451_CC', 'VKORC1_4451_AC', 'Height in cm', 'VKORC1_4451_AA', 'VKORC1_1542_CC', 'CYP2C9*2/*2', 'is Female', 'Simvastatin', 'is Male']				
+		
 		#self.feature_columns = self.feature_columns[:n_features]
+		
+		
+		#original columns
 		#self.feature_columns = ["Age in decades", "Height in cm", "Weight in kg", "VKORC1 A/G", "VKORC1 A/A", "VKORC1 genotype unknown", "CYP2C9 *1/*2", "CYP2C9 *1/*3", "CYP2C9*2/*2", "CYP2C9*2/*3", "CYP2C9*3/*3", "CYP2C9 genotype unknown", "Asian race", "Black or African American", "Missing or Mixed race", "Enzyme inducer status", "Amiodarone status"]
 
 
@@ -97,9 +105,14 @@ class Model():
 
 		for i, (a_star, a_hat) in enumerate(a_star_a_hat):
 
-			r = np.dot(self.X[i],betas[int(a_star)]) - np.dot(self.X[i],betas[int(a_hat)])
+			rs = [np.dot(self.X[i],betas[j]) for j in range(self.num_actions)]
+			r = max(rs) - rs[int(a_hat)]
+			#r = np.dot(self.X[i],betas[int(a_star)]) - np.dot(self.X[i],betas[int(a_hat)])
 			regret_step.append(r)
-		print("Final Regret", np.cumsum(regret_step)[-1])
+		#print("Final Regret", np.cumsum(regret_step)[-1])
+		#import matplotlib.pyplot as plt
+		#plt.plot(np.cumsum(regret_step))
+		#plt.show()
 		return np.cumsum(regret_step)
 
 
@@ -153,9 +166,13 @@ class Model():
 
 
 
-	def featurize(self, wf):
+	def featurize(self, wf, remove_nas_before_selecting_columns = True):
 		self.featurize_full(wf)
 		columns = self.feature_columns + [self.out_column]
+		
+		if remove_nas_before_selecting_columns:
+			self.remove_rows_with_missing_data() 
+		
 		self.feat_df = self.feat_df[columns]
 
 
@@ -194,6 +211,7 @@ class Model():
 
 		self.feat_df["VKORC1 A/G"] = wf.get_VKORC1_AG()
 		self.feat_df["VKORC1 A/A"] = wf.get_VKORC1_AA()
+		self.feat_df["VKORC1 G/G"] = wf.get_VKORC1_GG()
 		self.feat_df["VKORC1 genotype unknown"] = wf.get_VKORC1_genotype_unknown()
 
 		self.feat_df["CYP2C9 *1/*1"] = wf.get_CYP2C9_11()

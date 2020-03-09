@@ -1,7 +1,10 @@
 #!/bin/bash
 
-python main.py --model fixed_dose
-#python main.py --model wcda
-#python main.py --model wpda
-#python main.py --model UCBNet
-#python main.py --model ThompsonNet --R 0.005
+python main.py --model fixed_dose --num_trials 30
+python main.py --model wcda --num_trials 30
+python main.py --model wpda --num_trials 30
+python main.py --model UCBNet --num_trials 30
+python main.py --model UCBDNet --num_trials 30
+python main.py --model ThompsonNet --R 0.005 --num_trials 30
+python main.py --model ThompsonDNet --R 0.005 --num_trials 30
+python main.py --model eGreedy --e_0 0 --num_trials 30

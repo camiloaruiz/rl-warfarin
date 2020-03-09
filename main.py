@@ -122,16 +122,21 @@ if __name__ == "__main__":
 	model.featurize(wf)
 	model.prepare_XY()
 
-	all_regret = []
 	all_a_star_a_hat = []
-	all_frac_incorrect = []
+	all_regret, all_frac_incorrect = [],[]
+	final_regret,final_incorrect = [],[]
 	for trial in range(args.num_trials):
-		all_a_star_a_hat.append(model.experiment(rand_seed = trial))
-		frac_incorrect = model.calc_final_frac_incorrect(all_a_star_a_hat[-1])
-		#if trial==0: print(args.model,"Frac Incorrect= ",frac_incorrect)
-		all_frac_incorrect.append(model.calc_frac_incorrect(all_a_star_a_hat[trial]))
-		all_regret.append(model.expected_regret(all_a_star_a_hat[trial]))
-	print (args.model, "Averaged Frac Incorrect: ", np.mean(all_frac_incorrect))
+		a_star_a_hat = model.experiment(rand_seed = trial)
+		cum_frac_incorrect = model.calc_frac_incorrect(a_star_a_hat)
+		cum_regret = model.expected_regret(a_star_a_hat)		
+		
+		all_a_star_a_hat.append(a_star_a_hat)
+		all_frac_incorrect.append(cum_frac_incorrect)
+		all_regret.append(cum_regret)
+		final_regret.append(cum_regret[-1])
+		final_incorrect.append(cum_frac_incorrect[-1])
+        
+	print (args.model, "Averaged Frac-Incorrect / Final Regret: ", np.mean(final_incorrect), np.mean(final_regret) )
 
 
 
