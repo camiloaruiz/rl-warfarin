@@ -21,21 +21,22 @@ class UCBNet( Model):
 		self.num_force = num_force
 
 
-	def set_X(self, X):
-		nan_ = np.isnan(X).astype(float)
-		for i in range(len(self.feature_columns)):
-			print(self.feature_columns[i], np.sum(nan_[:,i]))
+	# def set_X(self, X):
+	# 	# nan_ = np.isnan(X).astype(float)
+	# 	# for i in range(len(self.feature_columns)):
+	# 	# 	print(self.feature_columns[i], np.sum(nan_[:,i]))
 
 
-		X_mean = np.nanmean(X, axis=0)
-		for i in range(len(self.feature_columns)):
-			X[:,i] = np.where(np.isnan(X[:,i]), X_mean[i], X[:,i]) 
-			# X[:,i] = np.where(np.isnan(X[:,i]), 0.0, X[:,i]) 
+	# 	# X_mean = np.nanmean(X, axis=0)
+	# 	# for i in range(len(self.feature_columns)):
+	# 	# 	# X[:,i] = np.where(np.isnan(X[:,i]), X_mean[i], X[:,i]) 
+	# 	# 	X[:,i] = np.where(np.isnan(X[:,i]), 0.0, X[:,i]) 
 
-		self.X = np.insert(X, 0, 1, axis=1)
+	# 	self.X = np.insert(X, 0, 1, axis=1)
 		
 
 	def predict(self, x, y):
+		x = np.append(x, 1.0) 
 		x.astype(float)
 		y.astype(int)
 		theta = np.matmul(np.linalg.inv(self.A), self.b) 
@@ -87,11 +88,12 @@ class UCBDNet(Model):
 			self.b.append(np.zeros((self.dim,1)))
 
 
-	def set_X(self, X):
-		self.X = np.insert(X, 0, 1, axis=1)
+	# def set_X(self, X):
+	# 	self.X = np.insert(X, 0, 1, axis=1)
 
 
 	def predict(self, x, y):
+		x = np.append(x, 1.0) 
 		x.astype(float)
 		x = np.expand_dims(x, axis=1).astype(float)
 		y.astype(int)

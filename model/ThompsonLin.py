@@ -25,11 +25,12 @@ class ThompsonNet(Model):
 		self.num_force = num_force
 
 
-	def set_X(self, X):
-		self.X = np.insert(X, 0, 1, axis=1)
+	# def set_X(self, X):
+	# 	self.X = np.insert(X, 0, 1, axis=1)
 
 
 	def predict(self, x, y):
+		x = np.append(x, 1.0) 
 		x.astype(float)
 		y.astype(int)
 		r_estimates = []
@@ -77,7 +78,6 @@ class ThompsonDNet(Model):
 		self.delta = delta
 		self.epsilon = epsilon
 		self.v2 = (self.R**2) * (24.0/self.epsilon) * self.dim * np.log(1.0/self.delta)
-		print("v**2: ", self.v2)
 		self.B = []
 		self.mu = []
 		self.f = []
@@ -89,11 +89,12 @@ class ThompsonDNet(Model):
 		self.num_force = num_force
 
 
-	def set_X(self, X):
-		self.X = np.insert(X, 0, 1, axis=1)
+	# def set_X(self, X):
+	# 	self.X = np.insert(X, 0, 1, axis=1)
 
 
 	def predict(self, x, y):
+		x = np.append(x, 1.0) 
 		x.astype(float)
 		x = np.expand_dims(x, axis=1).astype(float)
 		y.astype(int)

@@ -11,6 +11,8 @@ from model.eGreedy import eGreedy, eGreedyD
 
 from collections import defaultdict
 import scipy.stats as stats
+from scipy.stats.stats import pearsonr
+
 
 import matplotlib; matplotlib.use('TkAgg')
 #import matplotlib; matplotlib.use('Agg')
@@ -48,8 +50,8 @@ def str2bool(v):
 
 def parse_args():
 	parser = argparse.ArgumentParser(description = "Runs experiment for warfarin dose prediction")
-	parser.add_argument('--model', type = str, choices = ["fixed_dose", "wpda", "wcda","UCBNet", "UCBDNet", "ThompsonNet", "ThompsonDNet","eGreedy"], required=True)
-	parser.add_argument('--bin_weekly_dose', type=str2bool, nargs = "?", const=True)
+	parser.add_argument('--model', type = str, choices = ["fixed_dose", "wpda", "wcda","UCBNet", "UCBDNet", "ThompsonNet", "ThompsonDNet","eGreedy","eGreedyD"], required=True)
+	parser.add_argument('--bin_weekly_dose', type=int,  choices =[2,3,4,5], default=3)
 	parser.add_argument('--bound_constant', type=float, nargs = "?", default=2.0)
 	parser.add_argument('--num_force', type=int, nargs = "?", default=1)
 	parser.add_argument('--num_force_TH', type=int, nargs = "?", default=0)
@@ -71,21 +73,23 @@ def parse_args():
 def get_model(args):
 		# Instantiate model
 	if args.model == "fixed_dose":
-			model = FixedDose(bin_weekly_dose=True)
+			model = FixedDose(bin_weekly_dose=args.bin_weekly_dose)
 	elif args.model == "wpda":
-			model = WPDA(bin_weekly_dose=True)
+			model = WPDA(bin_weekly_dose=args.bin_weekly_dose)
 	elif args.model == "wcda":
-			model = WCDA(bin_weekly_dose=True)
+			model = WCDA(bin_weekly_dose=args.bin_weekly_dose)
 	elif args.model == "UCBNet":
-			model = UCBNet(bin_weekly_dose=True, num_actions=3, bound_constant=args.bound_constant, num_force=args.num_force)
+			model = UCBNet(bin_weekly_dose=args.bin_weekly_dose, num_actions=args.bin_weekly_dose, bound_constant=args.bound_constant, num_force=args.num_force)
 	elif args.model == "UCBDNet":
-			model = UCBDNet(bin_weekly_dose=True, num_actions=3, bound_constant=args.bound_constant, num_force=args.num_force)
+			model = UCBDNet(bin_weekly_dose=args.bin_weekly_dose, num_actions=args.bin_weekly_dose, bound_constant=args.bound_constant, num_force=args.num_force)
 	elif args.model == "ThompsonNet":
-			model = ThompsonNet(bin_weekly_dose=True, num_actions=3, R=args.R, delta=0.1, epsilon=1.0/np.log(1000), num_force=args.num_force_TH)
+			model = ThompsonNet(bin_weekly_dose=args.bin_weekly_dose, num_actions=args.bin_weekly_dose, R=args.R, delta=0.1, epsilon=1.0/np.log(1000), num_force=args.num_force_TH)
 	elif args.model == "ThompsonDNet":
-			model = ThompsonDNet(bin_weekly_dose=True, num_actions=3, R=args.R, delta=0.1, epsilon=1.0/np.log(1000), num_force=args.num_force_TH)
+			model = ThompsonDNet(bin_weekly_dose=args.bin_weekly_dose, num_actions=args.bin_weekly_dose, R=args.R, delta=0.1, epsilon=1.0/np.log(1000), num_force=args.num_force_TH)
 	elif args.model == "eGreedy":
-			model = eGreedy(bin_weekly_dose=True, num_actions=3, e_0 = args.e_0, e_scale = args.e_scale)
+			model = eGreedy(bin_weekly_dose=args.bin_weekly_dose, num_actions=args.bin_weekly_dose, e_0 = args.e_0, e_scale = args.e_scale)
+	elif args.model == "eGreedyD":
+			model = eGreedyD(bin_weekly_dose=args.bin_weekly_dose, num_actions=args.bin_weekly_dose, e_0 = args.e_0, e_scale = args.e_scale)
 	else:
 		assert(False)
 
@@ -115,10 +119,10 @@ if __name__ == "__main__":
 		all_frac_incorrect.append(cum_frac_incorrect)
 		all_regret.append(cum_regret)
 	
-	avg_frac_incorrect = np.mean(all_frac_incorrect, axis=0)
-	avg_regret = np.mean(all_regret, axis=0)
+	avg_frac_incorrect = np.mean(np.array(all_frac_incorrect), axis=0)
+	avg_regret = np.mean(np.array(all_regret), axis=0)
 	
-	print (args.model, "Averaged Frac-Incorrect / Final Regret: ", avg_frac_incorrect[-1], avg_regret[-1])
+	print (args.model, "Averaged Frac-Incorrect / Final Regret / pearson coef of regret: ", avg_frac_incorrect[-1], avg_regret[-1], pearsonr(avg_regret, range(0,avg_regret.shape[0]))[0])
 	plot_combined(all_frac_incorrect)
 	plot_combined(all_regret)
 
