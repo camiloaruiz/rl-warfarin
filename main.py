@@ -112,7 +112,7 @@ if __name__ == "__main__":
 
 	
 	all_a_star_a_hat = []
-	all_regret_expected,all_regret_observed, all_frac_incorrect, all_frac_correct = [],[],[]
+	all_regret_expected,all_regret_observed, all_frac_incorrect, all_frac_correct = [],[],[],[]
 	for trial in range(args.num_trials):
 		model = get_model(args)
 
