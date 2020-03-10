@@ -66,6 +66,67 @@ name17 ="model=ThompsonNet__bin_weekly_dose=3__bound_constant=2.0__num_force=1__
 name18 ="model=eGreedy__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=1__nan_val_0=True"
 
 
+
+
+
+# python main.py --model UCBNet --bound_constant 0.5 --feature_group 0
+name19 = "model=UCBNet__bin_weekly_dose=3__bound_constant=0.5__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
+# python main.py --model UCBNet --bound_constant 1 --feature_group 0
+name20 = "model=UCBNet__bin_weekly_dose=3__bound_constant=1.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
+# python main.py --model UCBNet --bound_constant 1.5 --feature_group 0
+name21 = "model=UCBNet__bin_weekly_dose=3__bound_constant=1.5__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
+# python main.py --model UCBNet --bound_constant 2 --feature_group 0
+name22 = "model=UCBNet__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
+# python main.py --model UCBNet --bound_constant 2.5 --feature_group 0
+name23 = "model=UCBNet__bin_weekly_dose=3__bound_constant=2.5__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
+
+
+
+# python main.py --model ThompsonNet --R 0.05 --feature_group 0
+name24 = "model=ThompsonNet__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.05__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
+# python main.py --model ThompsonNet --R 0.005 --feature_group 0
+name25 = "model=ThompsonNet__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
+# python main.py --model ThompsonNet --R 0.001 --feature_group 0
+name26 = "model=ThompsonNet__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.001__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
+# python main.py --model ThompsonNet --R 0.0005 --feature_group 0
+name27 = "model=ThompsonNet__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
+# python main.py --model ThompsonNet --R 0.0001 --feature_group 0
+name28 = "model=ThompsonNet__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0001__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
+# python main.py --model ThompsonNet --R 0.00005 --feature_group 0
+name29 = "model=ThompsonNet__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.00005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
+
+
+
+# python main.py --model eGreedy --e_0 0.1 --e_scale 0  --feature_group 0
+name30 = "model=eGreedy__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=0.0__feature_group=0__nan_val_0=False"
+# python main.py --model eGreedy --e_0 0.1 --e_scale 0.5  --feature_group 0
+name31 = "model=eGreedy__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=0.5__feature_group=0__nan_val_0=False"
+# python main.py --model eGreedy --e_0 0.1 --e_scale 1.0  --feature_group 0
+name32 = "model=eGreedy__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
+# python main.py --model eGreedy --e_0 0.1 --e_scale 2.0  --feature_group 0
+name33 = "model=eGreedy__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=2.0__feature_group=0__nan_val_0=False"
+# python main.py --model eGreedy --e_0 0.2 --e_scale 0.5  --feature_group 0
+name34 = "model=eGreedy__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.2__e_scale=0.5__feature_group=0__nan_val_0=False"
+# python main.py --model eGreedy --e_0 0.2 --e_scale 1.0  --feature_group 0
+name35 = "model=eGreedy__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.2__e_scale=1.0__feature_group=0__nan_val_0=False"
+# python main.py --model eGreedy --e_0 0.2 --e_scale 2.0  --feature_group 0
+name36 = "model=eGreedy__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.2__e_scale=2.0__feature_group=0__nan_val_0=False"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def plot_combined(scalar_results):
 	points = defaultdict(list)
 	for run_results in scalar_results:
@@ -113,55 +174,73 @@ def load_(name):
 
 if __name__ == "__main__":
 
-	data = []
-	names = ["fixed_dose","wcda","wpda"]
-	for name in [name1, name2, name3]:
-		data.append(load_(name)[2])
-	plot(results_list=data, names=names, title="Baseline NaN removed", xlabel="patient", ylabel="Frac Correct", combine=True)
+	# data = []
+	# names = ["fixed_dose","wcda","wpda"]
+	# for name in [name1, name2, name3]:
+	# 	data.append(load_(name)[2])
+	# plot(results_list=data, names=names, title="Baseline NaN removed", xlabel="patient", ylabel="Frac Correct", combine=True)
+
+	# data = []
+	# names = ["fixed_dose","wcda","wpda"]
+	# for name in [name4, name5, name6]:
+	# 	data.append(load_(name)[2])
+	# plot(results_list=data, names=names, title="Baseline NaN replced with 0", xlabel="patient", ylabel="Frac Correct", combine=True)
+
+
+
+
+	# data = []
+	# names = ["fixed_dose","wcda","wpda","UCBNet","ThompsonNet","eGreedy"]
+	# for name in [name1, name2, name3, name7, name8, name9,]:
+	# 	data.append(load_(name)[1])
+	# plot(results_list=data, names=names, title="Baseline NaN removed; wpda features", xlabel="patient", ylabel="Frac Incorrect", combine=True)
+
+	# data = []
+	# names = ["fixed_dose","wcda","wpda","UCBNet","ThompsonNet","eGreedy"]
+	# for name in [name4, name5, name6, name10, name11, name12]:
+	# 	data.append(load_(name)[1])
+	# plot(results_list=data, names=names, title="Baseline NaN replced with 0; wpda features", xlabel="patient", ylabel="Frac Incorrect", combine=True)
+
+
+
+
+
+	# data = []
+	# names = ["fixed_dose","wcda","wpda","UCBNet","ThompsonNet","eGreedy"]
+	# for name in [name1, name2, name3, name13, name14, name15]:
+	# 	data.append(load_(name)[1])
+	# plot(results_list=data, names=names, title="Baseline NaN removed; All features", xlabel="patient", ylabel="Frac Incorrect", combine=True)
+
+	# data = []
+	# names = ["fixed_dose","wcda","wpda","UCBNet","ThompsonNet","eGreedy"]
+	# for name in [name4, name5, name6, name16, name17, name18]:
+	# 	data.append(load_(name)[1])
+	# plot(results_list=data, names=names, title="Baseline NaN replced with; All features", xlabel="patient", ylabel="Frac Incorrect", combine=True)
+
+
+
+	# data = []
+	# names = ["fixed_dose","wcda","wpda","UCBNet","ThompsonNet","eGreedy"]
+	# for name in [name1, name2, name3, name7, name8, name9,]:
+	# 	data.append(load_(name)[3])
+	# plot(results_list=data, names=names, title="Baseline NaN removed; wpda features", xlabel="patient", ylabel="Expected Regret", combine=True)
+
+
+	# data = []
+	# names = ["fixed_dose","wcda","wpda","UCBNet","ThompsonNet","eGreedy"]
+	# for name in [name1, name2, name3, name7, name8, name9,]:
+	# 	data.append(load_(name)[4])
+	# plot(results_list=data, names=names, title="Baseline NaN removed; wpda features", xlabel="patient", ylabel="Oracle Regret", combine=True)
+
+
+
+
 
 	data = []
-	names = ["fixed_dose","wcda","wpda"]
-	for name in [name4, name5, name6]:
-		data.append(load_(name)[2])
-	plot(results_list=data, names=names, title="Baseline NaN replced with 0", xlabel="patient", ylabel="Frac Correct", combine=True)
-
-
-
-
-	data = []
-	names = ["fixed_dose","wcda","wpda","UCBNet","ThompsonNet","eGreedy"]
-	for name in [name1, name2, name3, name7, name8, name9,]:
+	names = ["0.5","1.0","1.5","2.0","2.5"]
+	for name in [name19, name20, name21, name22, name23]:
 		data.append(load_(name)[1])
-	plot(results_list=data, names=names, title="Baseline NaN removed; wpda features", xlabel="patient", ylabel="Frac Incorrect", combine=True)
-
-	data = []
-	names = ["fixed_dose","wcda","wpda","UCBNet","ThompsonNet","eGreedy"]
-	for name in [name4, name5, name6, name10, name11, name12]:
-		data.append(load_(name)[1])
-	plot(results_list=data, names=names, title="Baseline NaN replced with 0; wpda features", xlabel="patient", ylabel="Frac Incorrect", combine=True)
-
-
-
-
-
-	data = []
-	names = ["fixed_dose","wcda","wpda","UCBNet","ThompsonNet","eGreedy"]
-	for name in [name1, name2, name3, name13, name14, name15]:
-		data.append(load_(name)[1])
-	plot(results_list=data, names=names, title="Baseline NaN removed; All features", xlabel="patient", ylabel="Frac Incorrect", combine=True)
-
-	data = []
-	names = ["fixed_dose","wcda","wpda","UCBNet","ThompsonNet","eGreedy"]
-	for name in [name4, name5, name6, name16, name17, name18]:
-		data.append(load_(name)[1])
-	plot(results_list=data, names=names, title="Baseline NaN replced with; All features", xlabel="patient", ylabel="Frac Incorrect", combine=True)
-
-
-
-
-
-
-
+	plot(results_list=data, names=names, title="Baseline NaN removed; wpda features", xlabel="patient", ylabel="Expected Regret", combine=True)
 
 
 
