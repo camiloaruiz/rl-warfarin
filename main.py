@@ -122,7 +122,7 @@ if __name__ == "__main__":
 	avg_frac_incorrect = np.mean(np.array(all_frac_incorrect), axis=0)
 	avg_regret = np.mean(np.array(all_regret), axis=0)
 	
-	print (args.model, "Averaged Frac-Incorrect / Final Regret / pearson coef of regret: ", avg_frac_incorrect[-1], avg_regret[-1], pearsonr(avg_regret, range(0,avg_regret.shape[0]))[0])
+	print (args.model, "Averaged Frac-Incorrect / Final Regret / pearson coef of #incorrect: ", avg_frac_incorrect[-1], avg_regret[-1], pearsonr(avg_frac_incorrect[250:], range(0,avg_regret.shape[0]-250)))
 	plot_combined(all_frac_incorrect)
 	plot_combined(all_regret)
 
