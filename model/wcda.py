@@ -31,7 +31,7 @@ class WCDA(Model):
 
 		if self.bin_weekly_dose ==2:
 			out = bin_weekly_dose_val(weekly_dose)
-		elif self.bin_weekly_dose == 2:
+		elif self.bin_weekly_dose == 3:
 			out = bin_weekly_dose_val_2(weekly_dose)
 		elif self.bin_weekly_dose == 4:
 			out = bin_weekly_dose_val_4(weekly_dose)
