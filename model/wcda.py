@@ -4,7 +4,7 @@ import numpy as np
 from loader.warfarin_loader import bin_weekly_dose_val, bin_weekly_dose_val_2, bin_weekly_dose_val_4, bin_weekly_dose_val_5
 
 class WCDA(Model):
-	def __init__(self, bin_weekly_dose):
+	def __init__(self, bin_weekly_dose, feature_group=0):
 		super().__init__(bin_weekly_dose)
 		self.feature_columns = ["Age in decades", "Height in cm", "Weight in kg", "Asian race", "Black or African American", "Missing or Mixed race", "Enzyme inducer status", "Amiodarone status"]
 

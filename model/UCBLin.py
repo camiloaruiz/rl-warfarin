@@ -63,7 +63,6 @@ class UCBNet( Model):
 		self.A += np.matmul(x_a, x_a.T)
 		self.b += self.reward(y, a, y_hat)*x_a
 
-
 	
 
 

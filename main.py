@@ -120,7 +120,7 @@ if __name__ == "__main__":
 		
 		if args.bin_weekly_dose == 1:
 			cum_regret = model.non_binned_regret(a_star_a_hat)
-			regret_observed = cum_regret
+			regret_observed = cum_regret[:]
 			cum_frac_incorrect = model.non_binned_calc_frac_incorrect(a_star_a_hat)
 		else:
 			cum_frac_incorrect = model.calc_frac_incorrect(a_star_a_hat)
