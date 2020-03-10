@@ -6,15 +6,14 @@ from loader.warfarin_loader import bin_weekly_dose_val
 
 
 class eGreedy( Model):
-	def __init__(self, bin_weekly_dose, e_0=0.1, num_actions=3, num_force=1.0):
+	def __init__(self, bin_weekly_dose, e_0=0.1, e_scale=1.0, num_actions=3, num_force=1.0):
 		super().__init__(bin_weekly_dose)
+		self.e_0 = e_0    #epsilon in the epsilon greedy! must be in range[0,1]
+		self.t = 1.0
+		self.e_scale = e_scale
 
-
-		self.e = e_0    #epsilon in the epsilon greedy! must be in range[0,1]
-
-		self.dim = len(self.feature_columns)
+		self.dim = len(self.feature_columns)+3
 		self.num_actions = num_actions
-		#self.bound_constant = bound_constant
 		self.actions = np.identity(self.num_actions, dtype=float)
 		self.true_beta = None
 		self.A = np.identity(self.dim*self.num_actions, dtype=float)
@@ -26,14 +25,6 @@ class eGreedy( Model):
 	def predict(self, x, y):
 		x.astype(float)
 		y.astype(int)
-
-		if np.random.uniform() < self.e: #random case
-			a = np.random.choice(range(self.num_actions))
-			self.counts[a] += 1.0
-			self.train(x, y, a)
-			return a
-
-		#greedy case
 		theta = np.matmul(np.linalg.inv(self.A), self.b)
 		r_estimates = []
 		for a in range(self.num_actions):
@@ -46,6 +37,7 @@ class eGreedy( Model):
 			x_a = np.expand_dims(x_a, axis=1).astype(float)
 			r_estimates.append(np.matmul(theta.T, x_a)) #+ self.bound_constant*np.sqrt(np.matmul(np.matmul(x_a.T,np.linalg.inv(self.A)), x_a)))
 		a = np.argmax(r_estimates)
+		a = self.e_greedy(a)
 		self.train(x, y, a)
 		return a 
 			
@@ -55,6 +47,15 @@ class eGreedy( Model):
 		x_a = np.expand_dims(x_a, axis=1).astype(float)
 		self.A += np.matmul(x_a, x_a.T)
 		self.b += self.reward(y, a)*x_a
+
+
+	def e_greedy(a):
+		e = self.e_0/float(self.t**self.e_scale)
+		self.t += 1.0 
+		if np.random.uniform() < e: #random case
+			return np.random.choice(range(self.num_actions))
+		else:
+			return a
 
 
 	def reward(self, y, a):
@@ -67,44 +68,61 @@ class eGreedy( Model):
 
 
 
+class eGreedyD(Model):
+	def __init__(self, bin_weekly_dose, num_actions=3, num_force=1.0, e_0=1.0, e_scale=1.0):
+		super().__init__(bin_weekly_dose)
+		#self.feature_columns = ["Age in decades", "Height in cm", "Weight in kg", "VKORC1 A/G", "VKORC1 A/A", "VKORC1 genotype unknown", "CYP2C9 *1/*2", "CYP2C9 *1/*3", "CYP2C9*2/*2", "CYP2C9*2/*3", "CYP2C9*3/*3", "CYP2C9 genotype unknown", "Asian race", "Black or African American", "Missing or Mixed race", "Enzyme inducer status", "Amiodarone status"]
+		self.e_0 = e_0    #epsilon in the epsilon greedy! must be in range[0,1]
+		self.t = 1.0
+		self.e_scale = e_scale
 
-	"""
-	def featurize_2(self, wf):
-		self.feat_df = pd.DataFrame()
-		self.feat_df["Age in decades"] = wf.get_age_in_decades()
-		self.feat_df["Height in cm"] = wf.get_height_in_cm()
-		self.feat_df["Weight in kg"] = wf.get_weight_in_kg()
-		self.feat_df["Asian race"] = wf.get_asian_race()
-		self.feat_df["Black or African American"] = wf.get_black_or_african_american()
-		self.feat_df["Missing or Mixed race"] = wf.get_missing_or_mixed_race()
-		self.feat_df["Enzyme inducer status"] = wf.get_enzyme_inducer_status()
-		self.feat_df["Amiodarone status"] = wf.get_amiodarone_status()
-		self.feat_df["Weekly warfarin dose"] = wf.get_weekly_warfarin_dose()
-		if (self.bin_weekly_dose):
-			self.feat_df[self.out_column] = wf.get_binned_weekly_warfarin_dose()
+		self.dim = len(self.feature_columns) +1
+		self.num_actions = num_actions
+		self.true_beta = None
+		self.A = []
+		self.b = []
+		self.counts = np.zeros((self.num_actions))
+		self.num_force = num_force
+
+		for i in range(self.num_actions):
+			self.A.append(np.identity(self.dim, dtype=float))
+			self.b.append(np.zeros((self.dim,1)))
 
 
-	def featurize(self, wf):
-		self.feat_df = pd.DataFrame()
-		self.feat_df["Age in decades"] = wf.get_age_in_decades()
-		self.feat_df["Height in cm"] = wf.get_height_in_cm()
-		self.feat_df["Weight in kg"] = wf.get_weight_in_kg()
-		self.feat_df["VKORC1 A/G"] = wf.get_VKORC1_AG()
-		self.feat_df["VKORC1 A/A"] = wf.get_VKORC1_AA()
-		self.feat_df["VKORC1 genotype unknown"] = wf.get_VKORC1_genotype_unknown()
-		self.feat_df["CYP2C9 *1/*2"] = wf.get_CYP2C9_12()
-		self.feat_df["CYP2C9 *1/*3"] = wf.get_CYP2C9_13()
-		self.feat_df["CYP2C9*2/*2"] = wf.get_CYP2C9_22()
-		self.feat_df["CYP2C9*2/*3"] = wf.get_CYP2C9_23()
-		self.feat_df["CYP2C9*3/*3"] = wf.get_CYP2C9_33()
-		self.feat_df["CYP2C9 genotype unknown"] = wf.get_CYP2C9_genotype_unknown()
-		self.feat_df["Asian race"] = wf.get_asian_race()
-		self.feat_df["Black or African American"] = wf.get_black_or_african_american()
-		self.feat_df["Missing or Mixed race"] = wf.get_missing_or_mixed_race()
-		self.feat_df["Enzyme inducer status"] = wf.get_enzyme_inducer_status()
-		self.feat_df["Amiodarone status"] = wf.get_amiodarone_status()
-		self.feat_df["Weekly warfarin dose"] = wf.get_weekly_warfarin_dose()
-		if (self.bin_weekly_dose):
-			self.feat_df[self.out_column] = wf.get_binned_weekly_warfarin_dose()
-	"""
+	def predict(self, x, y):
+		x.astype(float)
+		x = np.expand_dims(x, axis=1).astype(float)
+		y.astype(int)
+		r_estimates = []
+		for a in range(self.num_actions):
+			if self.counts[a] < self.num_force:
+				self.counts[a] += 1.0
+				self.train(x, y, a)
+				return a 
 
+			theta = np.matmul(np.linalg.inv(self.A[a]), self.b[a]) 
+			r_estimates.append(np.matmul(theta.T, x))
+		a = np.argmax(r_estimates)
+		a = self.e_greedy(a)
+		self.train(x, y, a)
+		return a 
+
+
+	def train(self, x, y, a):
+		self.A[a] += np.matmul(x, x.T) 
+		self.b[a] += self.reward(y, a)*x
+
+	def e_greedy(a):
+		e = self.e_0/float(self.t**self.e_scale)
+		self.t += 1.0 
+		if np.random.uniform() < e: #random case
+			return np.random.choice(range(self.num_actions))
+		else:
+			return a
+
+
+	def reward(self, y, a):
+		if y == a:
+			return 0.0
+		else:
+			return -1.0

@@ -5,11 +5,9 @@ from model.fixed_dose import FixedDose
 from loader.warfarin_loader import WarfarinLoader
 import numpy as np
 
-from model.UCBLin import UCBNet
-from model.UCBLinD import UCBDNet
-from model.ThompsonLin import ThompsonNet
-from model.ThompsonD import ThompsonDNet
-from model.eGreedy import eGreedy
+from model.UCBLin import UCBNet, UCBDNet
+from model.ThompsonLin import ThompsonNet, ThompsonDNet
+from model.eGreedy import eGreedy, eGreedyD
 
 from collections import defaultdict
 import scipy.stats as stats
@@ -79,6 +77,7 @@ def parse_args():
 	parser.add_argument('--epsilon', type=float, nargs = "?", default=1.0/np.log(1000))
 	parser.add_argument('--num_trials', type=int, nargs = "?", default=30)
 	parser.add_argument('--e_0', type=float, nargs = "?", default=0.1)
+	parser.add_argument('--e_scale', type=float, nargs = "?", default=1.0)
 
 
 	# These still need their corresponding use cases to be written
@@ -88,16 +87,8 @@ def parse_args():
 	args = parser.parse_args()
 	return args
 
-
-
-if __name__ == "__main__":
-	args = parse_args()
-
-	# Get data
-	wf = WarfarinLoader(na_val=np.nan,fill_na_mean=False,stable_dose_only=True)
-
-
-	# Instantiate model
+def get_model(args):
+		# Instantiate model
 	if args.model == "fixed_dose":
 			model = FixedDose(bin_weekly_dose=True)
 	elif args.model == "wpda":
@@ -113,19 +104,32 @@ if __name__ == "__main__":
 	elif args.model == "ThompsonDNet":
 			model = ThompsonDNet(bin_weekly_dose=True, num_actions=3, R=args.R, delta=0.1, epsilon=1.0/np.log(1000), num_force=args.num_force_TH)
 	elif args.model == "eGreedy":
-			model = eGreedy(bin_weekly_dose=True, num_actions=3, e_0 = args.e_0)
-
+			model = eGreedy(bin_weekly_dose=True, num_actions=3, e_0 = args.e_0, e_scale = args.e_scale)
 	else:
 		assert(False)
 
 	# Prepare data
 	model.featurize(wf)
 	model.prepare_XY()
+	return model 
+
+
+
+if __name__ == "__main__":
+	args = parse_args()
+
+	# Get data
+	wf = WarfarinLoader(na_val=np.nan,fill_na_mean=False,stable_dose_only=True)
+
+
+
 
 	all_a_star_a_hat = []
 	all_regret, all_frac_incorrect = [],[]
 	final_regret,final_incorrect = [],[]
 	for trial in range(args.num_trials):
+		model = get_model(args)
+
 		a_star_a_hat = model.experiment(rand_seed = trial)
 		cum_frac_incorrect = model.calc_frac_incorrect(a_star_a_hat)
 		cum_regret = model.expected_regret(a_star_a_hat)		

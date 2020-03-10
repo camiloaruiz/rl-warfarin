@@ -19,6 +19,11 @@ class UCBNet( Model):
 		self.b = np.zeros((self.dim*self.num_actions,1))
 		self.counts = np.zeros((self.num_actions))
 		self.num_force = num_force
+
+
+	def set_X(self, X):
+		self.X = np.insert(X, 0, 1, axis=1)
+		
 		
 
 	def predict(self, x, y):
