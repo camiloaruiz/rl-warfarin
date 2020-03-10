@@ -92,7 +92,6 @@ class WarfarinLoader():
 
 
 
-
 	def get_diabetes(self):
 		return self.binarize_feature("Diabetes", {"na": self.na_val, 1.: 1, 0.: 0})
 
