@@ -112,7 +112,7 @@ if __name__ == "__main__":
 
 	
 	all_a_star_a_hat = []
-	all_regret_expected,all_regret_observed, all_frac_incorrect = [],[],[]
+	all_regret_expected,all_regret_observed, all_frac_incorrect, all_frac_correct = [],[],[]
 	for trial in range(args.num_trials):
 		model = get_model(args)
 
@@ -122,14 +122,17 @@ if __name__ == "__main__":
 			cum_regret = model.non_binned_regret(a_star_a_hat)
 			regret_observed = cum_regret[:]
 			cum_frac_incorrect = model.non_binned_calc_frac_incorrect(a_star_a_hat)
+			frac_correct = []
 		else:
 			cum_frac_incorrect = model.calc_frac_incorrect(a_star_a_hat)
 			cum_regret = model.expected_regret(a_star_a_hat)		
 			regret_observed = model.observed_regret(a_star_a_hat)
+			frac_correct = model.calc_frac_correct(a_star_a_hat)
 
 
 		all_a_star_a_hat.append(a_star_a_hat)
 		all_frac_incorrect.append(cum_frac_incorrect)
+		all_frac_correct.append(frac_correct)
 		all_regret_expected.append(cum_regret)
 		all_regret_observed.append(regret_observed)
 
@@ -150,6 +153,8 @@ if __name__ == "__main__":
 	np.save("data/"+ name+"__regret_expected",all_regret_expected)
 	np.save("data/"+ name+"__regret_observed",all_regret_observed)
 	np.save("data/"+ name+"__frac_incorrect",all_frac_incorrect)
+	np.save("data/"+ name+"__frac_correct",all_frac_correct)
+
 
 	#plot_combined(all_frac_incorrect)
 

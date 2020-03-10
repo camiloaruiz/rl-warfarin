@@ -154,6 +154,13 @@ class Model():
 		return np.cumsum(regret_step)
 
 
+	def calc_frac_correct(self, a_star_a_hat):
+		frac_incorrect = []
+		a_star, a_hat = map(list, zip(*a_star_a_hat))
+		for i in range(1, len(a_star_a_hat)+1):
+			frac_incorrect.append((np.mean(np.equal(a_star[:i], a_hat[:i])) ))
+		return frac_incorrect
+
 	def calc_frac_incorrect(self, a_star_a_hat):
 		frac_incorrect = []
 		a_star, a_hat = map(list, zip(*a_star_a_hat))
