@@ -12,7 +12,7 @@ class eGreedy( Model):
 		self.t = 1.0
 		self.e_scale = e_scale
 
-		self.dim = len(self.feature_columns)+3
+		self.dim = len(self.feature_columns)+1
 		self.num_actions = num_actions
 		self.actions = np.identity(self.num_actions, dtype=float)
 		self.true_beta = None
@@ -23,6 +23,7 @@ class eGreedy( Model):
 		
 
 	def predict(self, x, y):
+		x = np.append(x, 1.0) 
 		x.astype(float)
 		y.astype(int)
 		theta = np.matmul(np.linalg.inv(self.A), self.b)
@@ -49,7 +50,7 @@ class eGreedy( Model):
 		self.b += self.reward(y, a)*x_a
 
 
-	def e_greedy(a):
+	def e_greedy(self, a):
 		e = self.e_0/float(self.t**self.e_scale)
 		self.t += 1.0 
 		if np.random.uniform() < e: #random case
@@ -63,6 +64,9 @@ class eGreedy( Model):
 			return 0.0
 		else:
 			return -1.0
+
+	# def set_X(self, X):
+	# 	self.X = np.insert(X, 0, 1, axis=1)
 
 
 
@@ -90,6 +94,7 @@ class eGreedyD(Model):
 
 
 	def predict(self, x, y):
+		x = np.append(x, 1.0) 
 		x.astype(float)
 		x = np.expand_dims(x, axis=1).astype(float)
 		y.astype(int)
@@ -112,13 +117,16 @@ class eGreedyD(Model):
 		self.A[a] += np.matmul(x, x.T) 
 		self.b[a] += self.reward(y, a)*x
 
-	def e_greedy(a):
+	def e_greedy(self, a):
 		e = self.e_0/float(self.t**self.e_scale)
 		self.t += 1.0 
 		if np.random.uniform() < e: #random case
 			return np.random.choice(range(self.num_actions))
 		else:
 			return a
+
+	# def set_X(self, X):
+	# 	self.X = np.insert(X, 0, 1, axis=1)
 
 
 	def reward(self, y, a):

@@ -4,14 +4,14 @@ import pandas as pd
 
 
 class Model():
-	def __init__(self, bin_weekly_dose, n_features=20):
+	def __init__(self, bin_weekly_dose=3, n_features=20):
 		self.bin_weekly_dose = bin_weekly_dose
-		if (self.bin_weekly_dose):
+		if (self.bin_weekly_dose>=2):
 			self.out_column = "Binned weekly warfarin dose"
 		else:
 			self.out_column = "Weekly warfarin dose"
 		self.true_beta = None
-		self.num_actions = 3
+		self.num_actions = bin_weekly_dose
 
 		# these are features sorted by importance from running feature_selection.py
 		#self.feature_columns = ['Weight in kg', 'VKORC1_1542_CC', 'VKORC1 A/A', 'Asian race', 'Height in cm', 'Black or African American', 'Smoker', 'Age in decades', 'CYP2C9 *1/*3', 'VKORC1_497_TT', 'White race', 'Enzyme inducer status', 'VKORC1 A/G', 'VKORC1_1542_CG', 'CYP2C9*2/*3', 'VKORC1_497_GG', 'Diabetes', 'VKORC1_1542_NA', 'Aspirin', 'VKORC1 genotype unknown', 'VKORC1_4451_CC', 'CYP2C9 *1/*2', 'VKORC1_4451_AC', 'Simvastatin', 'VKORC1_497_unknown', 'VKORC1_4451_AA', 'Amiodarone status', 'Congestive Heart Failure', 'CYP2C9 *1/*1', 'VKORC1_4451_NA', 'VKORC1_497_GT', 'Valve replacement', 'CYP2C9*3/*3', 'is Female', 'Missing or Mixed race', 'is Male', 'CYP2C9*2/*2', 'unknown Gender', 'CYP2C9 genotype unknown']
@@ -25,6 +25,7 @@ class Model():
 		
 		#original columns
 		self.feature_columns = ["Age in decades", "Height in cm", "Weight in kg", "VKORC1 A/G", "VKORC1 A/A", "VKORC1 genotype unknown", "CYP2C9 *1/*2", "CYP2C9 *1/*3", "CYP2C9*2/*2", "CYP2C9*2/*3", "CYP2C9*3/*3", "CYP2C9 genotype unknown", "Asian race", "Black or African American", "Missing or Mixed race", "Enzyme inducer status", "Amiodarone status"]
+		# self.feature_columns = ["Age in decades", "Height in cm", "Weight in kg", "VKORC1 genotype unknown", "CYP2C9 *1/*2", "CYP2C9 *1/*3", "CYP2C9*2/*2", "CYP2C9*2/*3", "CYP2C9*3/*3", "CYP2C9 genotype unknown", "Asian race", "Black or African American", "Missing or Mixed race", "Enzyme inducer status", "Amiodarone status"]
 
 
 
@@ -37,6 +38,11 @@ class Model():
 
 
 	def set_X(self, X):
+		X_mean = np.nanmean(X, axis=0)
+		for i in range(len(self.feature_columns)):
+			# X[:,i] = np.where(np.isnan(X[:,i]), X_mean[i], X[:,i]) 
+			X[:,i] = np.where(np.isnan(X[:,i]), 0.0, X[:,i]) 
+
 		self.X = X
 
 
@@ -78,7 +84,6 @@ class Model():
 		betas = []
 		for a in range(self.num_actions):
 			y_a = self.get_y_for_action(a,Y)
-			print(y_a[0:10],y_a[10:20],y_a[20:30])
 			beta = np.linalg.lstsq(X,y_a)[0]
 			betas.append(beta)
 
@@ -112,7 +117,7 @@ class Model():
 		for i, (a_star, a_hat) in enumerate(a_star_a_hat):
 			rs = [np.dot(self.X[i],betas[j]) for j in range(self.num_actions)]
 			r = max(rs) - rs[int(a_hat)]
-			#r = np.dot(self.X[i],betas[int(a_star)]) - np.dot(self.X[i],betas[int(a_hat)])
+			# r = np.dot(self.X[i],betas[int(a_star)]) - np.dot(self.X[i],betas[int(a_hat)])
 			regret_step.append(r)
 		return np.cumsum(regret_step)
 
@@ -121,7 +126,7 @@ class Model():
 		frac_incorrect = []
 		a_star, a_hat = map(list, zip(*a_star_a_hat))
 		for i in range(1, len(a_star_a_hat)+1):
-			frac_incorrect.append(1.0-(np.sum(np.equal(a_star[:i], a_hat[:i]))/float(i)))
+			frac_incorrect.append((1.0 - np.mean(np.equal(a_star[:i], a_hat[:i])) ))
 		return frac_incorrect
 
 
@@ -132,18 +137,18 @@ class Model():
 		X, Y = self.X, self.Y
 		assert(X.shape[0] == Y.shape[0])
 		data = list(zip(X, Y))
-		random.seed(rand_seed)
+		random.seed(rand_seed+67958254)
 		random.shuffle(data)
 		a_star_a_hat = []
 		for x, y in data:
 
-			if np.any(np.isin(x,np.nan)) or np.any(np.isin(x,'na')):
-				continue
-				x = np.where(x==np.nan, 0, x) 
-				x = np.where(x=='na', 0, x) 
+			# if np.any(np.isin(x,np.nan)) or np.any(np.isin(x,'na')):
+			# 	continue
+			# 	x = np.where(x==np.nan, 0, x) 
+			# 	x = np.where(x=='na', 0, x) 
 				
-			if np.any(np.isin(y,np.nan)) or np.any(np.isin(y,'na')):
-				continue
+			# if np.any(np.isin(y,np.nan)) or np.any(np.isin(y,'na')):
+			# 	continue
 
 			a = self.predict(x,y)
 			a_star_a_hat.append((y, a))
@@ -217,7 +222,7 @@ class Model():
 		self.feat_df["Enzyme inducer status"] = wf.get_enzyme_inducer_status()
 		self.feat_df["Amiodarone status"] = wf.get_amiodarone_status()
 		self.feat_df["Weekly warfarin dose"] = wf.get_weekly_warfarin_dose()
-		if (self.bin_weekly_dose):
-			self.feat_df[self.out_column] = wf.get_binned_weekly_warfarin_dose()
+		if (self.bin_weekly_dose>=2):
+			self.feat_df[self.out_column] = wf.get_binned_weekly_warfarin_dose(self.bin_weekly_dose)
 
 

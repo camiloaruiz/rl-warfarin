@@ -35,6 +35,49 @@ def bin_weekly_dose_val(weekly_dose_val):
 		assert(False)
 	return out
 
+def bin_weekly_dose_val_2(weekly_dose_val):
+	if weekly_dose_val == "na":
+		out = np.nan
+	elif weekly_dose_val < 36:
+		out = 0
+	elif weekly_dose_val >= 36:
+		out = 1
+	else:
+		assert(False)
+	return out
+
+def bin_weekly_dose_val_4(weekly_dose_val):
+	if weekly_dose_val == "na":
+		out = np.nan
+	elif weekly_dose_val < 16:
+		out = 0
+	elif 16 <= weekly_dose_val < 30:
+		out = 1
+	elif 30<= weekly_dose_val < 45:
+		out = 2
+	elif weekly_dose_val >= 45:
+		out = 3
+	else:
+		assert(False)
+	return out
+
+def bin_weekly_dose_val_5(weekly_dose_val):
+	if weekly_dose_val == "na":
+		out = np.nan
+	elif weekly_dose_val < 10:
+		out = 0
+	elif 10 <= weekly_dose_val < 20:
+		out = 1
+	elif 20<= weekly_dose_val < 30:
+		out = 2
+	elif 30<= weekly_dose_val < 40:
+		out = 3
+	elif weekly_dose_val >= 40:
+		out = 4
+	else:
+		assert(False)
+	return out
+
 class WarfarinLoader():
 	def __init__(self, file_path = "data/warfarin.csv",na_val=np.nan,fill_na_mean=False,stable_dose_only=False):
 		self.file_path = file_path
@@ -220,9 +263,18 @@ class WarfarinLoader():
 
 		return weekly
 
-	def get_binned_weekly_warfarin_dose(self):
+	def get_binned_weekly_warfarin_dose(self, bin_weekly_dose=3):
 		weekly = self.get_weekly_warfarin_dose().replace(np.nan,"na")
-		return weekly.apply(lambda weekly_dose_val: bin_weekly_dose_val(weekly_dose_val))
+		if bin_weekly_dose == 3: 
+			return weekly.apply(lambda weekly_dose_val: bin_weekly_dose_val(weekly_dose_val))
+		elif bin_weekly_dose == 2:
+			return weekly.apply(lambda weekly_dose_val: bin_weekly_dose_val_2(weekly_dose_val))
+		elif bin_weekly_dose == 4:
+			return weekly.apply(lambda weekly_dose_val: bin_weekly_dose_val_4(weekly_dose_val))
+		elif bin_weekly_dose == 5:
+			return weekly.apply(lambda weekly_dose_val: bin_weekly_dose_val_5(weekly_dose_val))
+		else:
+			assert(False)
 
 
 

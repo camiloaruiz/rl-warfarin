@@ -1,7 +1,7 @@
 from model.model import Model
 import pandas as pd
 import numpy as np
-from loader.warfarin_loader import bin_weekly_dose_val
+from loader.warfarin_loader import bin_weekly_dose_val, bin_weekly_dose_val_2, bin_weekly_dose_val_4, bin_weekly_dose_val_5
 
 class WCDA(Model):
 	def __init__(self, bin_weekly_dose):
@@ -29,9 +29,15 @@ class WCDA(Model):
 		bias = 4.0376
 		weekly_dose = (np.sum(coef*x) + bias)**2.00
 
-		if not(self.bin_weekly_dose):
-			out = weekly_dose
-		else:
+		if self.bin_weekly_dose ==2:
 			out = bin_weekly_dose_val(weekly_dose)
+		elif self.bin_weekly_dose == 2:
+			out = bin_weekly_dose_val_2(weekly_dose)
+		elif self.bin_weekly_dose == 4:
+			out = bin_weekly_dose_val_4(weekly_dose)
+		elif self.bin_weekly_dose == 5:
+			out = bin_weekly_dose_val_5(weekly_dose)
+		else:
+			out = weekly_dose
 		return out
 

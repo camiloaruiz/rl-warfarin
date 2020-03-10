@@ -10,7 +10,7 @@ class ThompsonNet(Model):
 		super().__init__(bin_weekly_dose)
 		#self.feature_columns = ["Age in decades", "Height in cm", "Weight in kg", "VKORC1 A/G", "VKORC1 A/A", "VKORC1 genotype unknown", "CYP2C9 *1/*2", "CYP2C9 *1/*3", "CYP2C9*2/*2", "CYP2C9*2/*3", "CYP2C9*3/*3", "CYP2C9 genotype unknown", "Asian race", "Black or African American", "Missing or Mixed race", "Enzyme inducer status", "Amiodarone status"]
 
-		self.dim = len(self.feature_columns) +3 
+		self.dim = len(self.feature_columns) +1
 		self.num_actions = num_actions
 		self.actions = np.identity(self.num_actions, dtype=float)
 		self.true_beta = None
@@ -25,11 +25,12 @@ class ThompsonNet(Model):
 		self.num_force = num_force
 
 
-	def set_X(self, X):
-		self.X = np.insert(X, 0, 1, axis=1)
+	# def set_X(self, X):
+	# 	self.X = np.insert(X, 0, 1, axis=1)
 
 
 	def predict(self, x, y):
+		x = np.append(x, 1.0) 
 		x.astype(float)
 		y.astype(int)
 		r_estimates = []
@@ -77,7 +78,6 @@ class ThompsonDNet(Model):
 		self.delta = delta
 		self.epsilon = epsilon
 		self.v2 = (self.R**2) * (24.0/self.epsilon) * self.dim * np.log(1.0/self.delta)
-		print("v**2: ", self.v2)
 		self.B = []
 		self.mu = []
 		self.f = []
@@ -89,11 +89,12 @@ class ThompsonDNet(Model):
 		self.num_force = num_force
 
 
-	def set_X(self, X):
-		self.X = np.insert(X, 0, 1, axis=1)
+	# def set_X(self, X):
+	# 	self.X = np.insert(X, 0, 1, axis=1)
 
 
 	def predict(self, x, y):
+		x = np.append(x, 1.0) 
 		x.astype(float)
 		x = np.expand_dims(x, axis=1).astype(float)
 		y.astype(int)
