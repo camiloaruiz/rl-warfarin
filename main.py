@@ -115,12 +115,12 @@ if __name__ == "__main__":
 		all_frac_incorrect.append(cum_frac_incorrect)
 		all_regret.append(cum_regret)
 	
-	avg_frac_incorrect = np.mean(all_frac_incorrect, axis=1)
-	avg_regret = np.mean(all_regret, axis=1)
+	avg_frac_incorrect = np.mean(all_frac_incorrect, axis=0)
+	avg_regret = np.mean(all_regret, axis=0)
 	
-
 	print (args.model, "Averaged Frac-Incorrect / Final Regret: ", avg_frac_incorrect[-1], avg_regret[-1])
 	plot_combined(all_frac_incorrect)
+	plot_combined(all_regret)
 
 
 

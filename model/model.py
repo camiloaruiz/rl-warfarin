@@ -18,7 +18,7 @@ class Model():
 		
 		
 		#correlation with rewards instead
-		# self.feature_columns = ['Weight in kg', 'VKORC1 A/G', 'Enzyme inducer status', 'Black or African American', 'VKORC1 G/G', 'VKORC1_497_GT', 'Age in decades', 'CYP2C9 *1/*2', 'Missing or Mixed race', 'VKORC1_1542_CG', 'VKORC1_1542_GG', 'Amiodarone status', 'White race', 'Congestive Heart Failure', 'CYP2C9 *1/*3', 'CYP2C9*2/*3', 'VKORC1_497_GG', 'VKORC1_497_TT', 'Smoker', 'Diabetes', 'VKORC1 A/A', 'Asian race', 'Aspirin', 'CYP2C9 *1/*1', 'Valve replacement', 'CYP2C9*3/*3', 'VKORC1_4451_CC', 'VKORC1_4451_AC', 'Height in cm', 'VKORC1_4451_AA', 'VKORC1_1542_CC', 'CYP2C9*2/*2', 'is Female', 'Simvastatin', 'is Male']				
+		#self.feature_columns = ['Weight in kg', 'VKORC1 A/G', 'Enzyme inducer status', 'Black or African American', 'VKORC1 G/G', 'VKORC1_497_GT', 'Age in decades', 'CYP2C9 *1/*2', 'Missing or Mixed race', 'VKORC1_1542_CG', 'VKORC1_1542_GG', 'Amiodarone status', 'White race', 'Congestive Heart Failure', 'CYP2C9 *1/*3', 'CYP2C9*2/*3', 'VKORC1_497_GG', 'VKORC1_497_TT', 'Smoker', 'Diabetes', 'VKORC1 A/A', 'Asian race', 'Aspirin', 'CYP2C9 *1/*1', 'Valve replacement', 'CYP2C9*3/*3', 'VKORC1_4451_CC', 'VKORC1_4451_AC', 'Height in cm', 'VKORC1_4451_AA', 'VKORC1_1542_CC', 'CYP2C9*2/*2', 'is Female', 'Simvastatin', 'is Male']				
 		
 		#self.feature_columns = self.feature_columns[:n_features]
 		
@@ -49,7 +49,7 @@ class Model():
 
 
 	def prepare_XY(self):
-		self.remove_rows_with_missing_data()
+		# self.remove_rows_with_missing_data()
 		self.set_X(self.feat_df[self.feature_columns].values)
 		self.set_Y(self.feat_df[self.out_column].values)
 
@@ -78,7 +78,6 @@ class Model():
 		betas = []
 		for a in range(self.num_actions):
 			y_a = self.get_y_for_action(a,Y)
-			print(y_a[0:10],y_a[10:20],y_a[20:30])
 			beta = np.linalg.lstsq(X,y_a)[0]
 			betas.append(beta)
 
@@ -112,7 +111,7 @@ class Model():
 		for i, (a_star, a_hat) in enumerate(a_star_a_hat):
 			rs = [np.dot(self.X[i],betas[j]) for j in range(self.num_actions)]
 			r = max(rs) - rs[int(a_hat)]
-			#r = np.dot(self.X[i],betas[int(a_star)]) - np.dot(self.X[i],betas[int(a_hat)])
+			# r = np.dot(self.X[i],betas[int(a_star)]) - np.dot(self.X[i],betas[int(a_hat)])
 			regret_step.append(r)
 		return np.cumsum(regret_step)
 

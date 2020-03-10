@@ -10,7 +10,7 @@ class UCBNet( Model):
 		super().__init__(bin_weekly_dose)
 		#self.feature_columns = ["Age in decades", "Height in cm", "Weight in kg", "VKORC1 A/G", "VKORC1 A/A", "VKORC1 genotype unknown", "CYP2C9 *1/*2", "CYP2C9 *1/*3", "CYP2C9*2/*2", "CYP2C9*2/*3", "CYP2C9*3/*3", "CYP2C9 genotype unknown", "Asian race", "Black or African American", "Missing or Mixed race", "Enzyme inducer status", "Amiodarone status"]
 
-		self.dim = len(self.feature_columns) + 3 
+		self.dim = len(self.feature_columns) + 1
 		self.num_actions = num_actions
 		self.bound_constant = bound_constant
 		self.actions = np.identity(self.num_actions, dtype=float)
@@ -22,6 +22,16 @@ class UCBNet( Model):
 
 
 	def set_X(self, X):
+		nan_ = np.isnan(X).astype(float)
+		for i in range(len(self.feature_columns)):
+			print(self.feature_columns[i], np.sum(nan_[:,i]))
+
+
+		X_mean = np.nanmean(X, axis=0)
+		for i in range(len(self.feature_columns)):
+			X[:,i] = np.where(np.isnan(X[:,i]), X_mean[i], X[:,i]) 
+			# X[:,i] = np.where(np.isnan(X[:,i]), 0.0, X[:,i]) 
+
 		self.X = np.insert(X, 0, 1, axis=1)
 		
 

@@ -12,7 +12,7 @@ class eGreedy( Model):
 		self.t = 1.0
 		self.e_scale = e_scale
 
-		self.dim = len(self.feature_columns)+3
+		self.dim = len(self.feature_columns)+1
 		self.num_actions = num_actions
 		self.actions = np.identity(self.num_actions, dtype=float)
 		self.true_beta = None

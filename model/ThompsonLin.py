@@ -10,7 +10,7 @@ class ThompsonNet(Model):
 		super().__init__(bin_weekly_dose)
 		#self.feature_columns = ["Age in decades", "Height in cm", "Weight in kg", "VKORC1 A/G", "VKORC1 A/A", "VKORC1 genotype unknown", "CYP2C9 *1/*2", "CYP2C9 *1/*3", "CYP2C9*2/*2", "CYP2C9*2/*3", "CYP2C9*3/*3", "CYP2C9 genotype unknown", "Asian race", "Black or African American", "Missing or Mixed race", "Enzyme inducer status", "Amiodarone status"]
 
-		self.dim = len(self.feature_columns) +3 
+		self.dim = len(self.feature_columns) +1
 		self.num_actions = num_actions
 		self.actions = np.identity(self.num_actions, dtype=float)
 		self.true_beta = None
