@@ -140,11 +140,13 @@ if __name__ == "__main__":
 	avg_frac_incorrect = np.mean(np.array(all_frac_incorrect), axis=0)
 	avg_regret_expected = np.mean(np.array(all_regret_expected), axis=0)
 	avg_regret_observed = np.mean(np.array(all_regret_observed), axis=0)
-	
+
+
+	print (name)
 	print (args.model, "Averaged Frac-Incorrect / Final Regret expected / Final Regret observed ", avg_frac_incorrect[-1], avg_regret_expected[-1], avg_regret_observed[-1])
-	plot_combined(all_frac_incorrect)
-	plot_combined(all_regret_expected)
-	plot_combined(all_regret_observed)
+	# plot_combined(all_frac_incorrect)
+	# plot_combined(all_regret_expected)
+	# plot_combined(all_regret_observed)
 
 
 
