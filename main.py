@@ -12,6 +12,7 @@ from model.eGreedy import eGreedy, eGreedyD
 from collections import defaultdict
 import scipy.stats as stats
 from scipy.stats.stats import pearsonr
+import sys
 
 
 import matplotlib; matplotlib.use('TkAgg')
@@ -51,7 +52,7 @@ def str2bool(v):
 def parse_args():
 	parser = argparse.ArgumentParser(description = "Runs experiment for warfarin dose prediction")
 	parser.add_argument('--model', type = str, choices = ["fixed_dose", "wpda", "wcda","UCBNet", "UCBDNet", "ThompsonNet", "ThompsonDNet","eGreedy","eGreedyD"], required=True)
-	parser.add_argument('--bin_weekly_dose', type=int,  choices =[2,3,4,5], default=3)
+	parser.add_argument('--bin_weekly_dose', type=int,  choices =[1,2,3,4,5], default=3)
 	parser.add_argument('--bound_constant', type=float, nargs = "?", default=2.0)
 	parser.add_argument('--num_force', type=int, nargs = "?", default=1)
 	parser.add_argument('--num_force_TH', type=int, nargs = "?", default=0)
@@ -61,11 +62,9 @@ def parse_args():
 	parser.add_argument('--num_trials', type=int, nargs = "?", default=30)
 	parser.add_argument('--e_0', type=float, nargs = "?", default=0.1)
 	parser.add_argument('--e_scale', type=float, nargs = "?", default=1.0)
+	parser.add_argument('--feature_group', type=int, nargs = "?", default=0)
+	parser.add_argument("--nan_val_0", type=str2bool, nargs='?', const=True, default=False, help="Activate nan replaced to 0 mode.")
 
-
-	# These still need their corresponding use cases to be written
-	parser.add_argument('--num_bins', type=int, nargs = "?", const=3)
-	parser.add_argument('--feature_group', type=int, nargs = "?", const=0)
 
 	args = parser.parse_args()
 	return args
@@ -79,17 +78,17 @@ def get_model(args):
 	elif args.model == "wcda":
 			model = WCDA(bin_weekly_dose=args.bin_weekly_dose)
 	elif args.model == "UCBNet":
-			model = UCBNet(bin_weekly_dose=args.bin_weekly_dose, num_actions=args.bin_weekly_dose, bound_constant=args.bound_constant, num_force=args.num_force)
+			model = UCBNet(bin_weekly_dose=args.bin_weekly_dose, num_actions=args.bin_weekly_dose, bound_constant=args.bound_constant, num_force=args.num_force, feature_group=args.feature_group)
 	elif args.model == "UCBDNet":
-			model = UCBDNet(bin_weekly_dose=args.bin_weekly_dose, num_actions=args.bin_weekly_dose, bound_constant=args.bound_constant, num_force=args.num_force)
+			model = UCBDNet(bin_weekly_dose=args.bin_weekly_dose, num_actions=args.bin_weekly_dose, bound_constant=args.bound_constant, num_force=args.num_force, feature_group=args.feature_group)
 	elif args.model == "ThompsonNet":
-			model = ThompsonNet(bin_weekly_dose=args.bin_weekly_dose, num_actions=args.bin_weekly_dose, R=args.R, delta=0.1, epsilon=1.0/np.log(1000), num_force=args.num_force_TH)
+			model = ThompsonNet(bin_weekly_dose=args.bin_weekly_dose, num_actions=args.bin_weekly_dose, R=args.R, delta=0.1, epsilon=1.0/np.log(1000), num_force=args.num_force_TH, feature_group=args.feature_group)
 	elif args.model == "ThompsonDNet":
-			model = ThompsonDNet(bin_weekly_dose=args.bin_weekly_dose, num_actions=args.bin_weekly_dose, R=args.R, delta=0.1, epsilon=1.0/np.log(1000), num_force=args.num_force_TH)
+			model = ThompsonDNet(bin_weekly_dose=args.bin_weekly_dose, num_actions=args.bin_weekly_dose, R=args.R, delta=0.1, epsilon=1.0/np.log(1000), num_force=args.num_force_TH, feature_group=args.feature_group)
 	elif args.model == "eGreedy":
-			model = eGreedy(bin_weekly_dose=args.bin_weekly_dose, num_actions=args.bin_weekly_dose, e_0 = args.e_0, e_scale = args.e_scale)
+			model = eGreedy(bin_weekly_dose=args.bin_weekly_dose, num_actions=args.bin_weekly_dose, e_0 = args.e_0, e_scale = args.e_scale, feature_group=args.feature_group)
 	elif args.model == "eGreedyD":
-			model = eGreedyD(bin_weekly_dose=args.bin_weekly_dose, num_actions=args.bin_weekly_dose, e_0 = args.e_0, e_scale = args.e_scale)
+			model = eGreedyD(bin_weekly_dose=args.bin_weekly_dose, num_actions=args.bin_weekly_dose, e_0 = args.e_0, e_scale = args.e_scale, feature_group=args.feature_group)
 	else:
 		assert(False)
 
@@ -102,36 +101,55 @@ def get_model(args):
 
 if __name__ == "__main__":
 	args = parse_args()
+	name = [str(arg)+"="+str(getattr(args, arg)) for arg in vars(args)]
+	name ="__".join(name)
 
 	# Get data
-	wf = WarfarinLoader(na_val=np.nan,fill_na_mean=False,stable_dose_only=True)
+	if args.nan_val_0:
+		wf = WarfarinLoader(na_val=0.0,fill_na_mean=False,stable_dose_only=True)
+	else: 
+		wf = WarfarinLoader(na_val=np.nan,fill_na_mean=False,stable_dose_only=True)
+
 	
 	all_a_star_a_hat = []
-	all_regret, all_frac_incorrect = [],[]
+	all_regret_expected,all_regret_observed, all_frac_incorrect = [],[],[]
 	for trial in range(args.num_trials):
 		model = get_model(args)
 
 		a_star_a_hat = model.experiment(rand_seed = trial)
-		cum_frac_incorrect = model.calc_frac_incorrect(a_star_a_hat)
-		cum_regret = model.expected_regret(a_star_a_hat)		
 		
+		if args.bin_weekly_dose == 1:
+			cum_regret = model.non_binned_regret(a_star_a_hat)
+			regret_observed = cum_regret
+			cum_frac_incorrect = model.non_binned_calc_frac_incorrect(a_star_a_hat)
+		else:
+			cum_frac_incorrect = model.calc_frac_incorrect(a_star_a_hat)
+			cum_regret = model.expected_regret(a_star_a_hat)		
+			regret_observed = model.observed_regret(a_star_a_hat)
+
+
 		all_a_star_a_hat.append(a_star_a_hat)
 		all_frac_incorrect.append(cum_frac_incorrect)
-		all_regret.append(cum_regret)
+		all_regret_expected.append(cum_regret)
+		all_regret_observed.append(regret_observed)
+
 	
 	avg_frac_incorrect = np.mean(np.array(all_frac_incorrect), axis=0)
-	avg_regret = np.mean(np.array(all_regret), axis=0)
+	avg_regret_expected = np.mean(np.array(all_regret_expected), axis=0)
+	avg_regret_observed = np.mean(np.array(all_regret_observed), axis=0)
 	
-	print (args.model, "Averaged Frac-Incorrect / Final Regret / pearson coef of #incorrect: ", avg_frac_incorrect[-1], avg_regret[-1], pearsonr(avg_frac_incorrect[250:], range(0,avg_regret.shape[0]-250)))
+	print (args.model, "Averaged Frac-Incorrect / Final Regret expected / Final Regret observed ", avg_frac_incorrect[-1], avg_regret_expected[-1], avg_regret_observed[-1])
 	plot_combined(all_frac_incorrect)
-	plot_combined(all_regret)
+	plot_combined(all_regret_expected)
+	plot_combined(all_regret_observed)
 
 
 
 	#Code for adams plotting functions
-	np.save("data/"+ args.model+"_a_star_a_hat",all_a_star_a_hat)
-	np.save("data/"+ args.model+"_regret",all_regret)
-	np.save("data/"+ args.model+"_frac_incorrect",all_frac_incorrect)
+	np.save("data/"+ name+"__a_star_a_hat",all_a_star_a_hat)
+	np.save("data/"+ name+"__regret_expected",all_regret_expected)
+	np.save("data/"+ name+"__regret_observed",all_regret_observed)
+	np.save("data/"+ name+"__frac_incorrect",all_frac_incorrect)
 
 	#plot_combined(all_frac_incorrect)
 

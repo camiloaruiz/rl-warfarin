@@ -6,8 +6,8 @@ from loader.warfarin_loader import bin_weekly_dose_val
 
 
 class ThompsonNet(Model):
-	def __init__(self, bin_weekly_dose, num_actions=3, R=0.5, delta=0.1, epsilon=1.0/np.log(1000), num_force=0.0):
-		super().__init__(bin_weekly_dose)
+	def __init__(self, bin_weekly_dose, num_actions=3, R=0.5, delta=0.1, epsilon=1.0/np.log(1000), num_force=0.0, feature_group=0):
+		super().__init__(bin_weekly_dose, feature_group)
 		#self.feature_columns = ["Age in decades", "Height in cm", "Weight in kg", "VKORC1 A/G", "VKORC1 A/A", "VKORC1 genotype unknown", "CYP2C9 *1/*2", "CYP2C9 *1/*3", "CYP2C9*2/*2", "CYP2C9*2/*3", "CYP2C9*3/*3", "CYP2C9 genotype unknown", "Asian race", "Black or African American", "Missing or Mixed race", "Enzyme inducer status", "Amiodarone status"]
 
 		self.dim = len(self.feature_columns) +1
@@ -32,42 +32,39 @@ class ThompsonNet(Model):
 	def predict(self, x, y):
 		x = np.append(x, 1.0) 
 		x.astype(float)
-		y.astype(int)
+		# y.astype(int)
 		r_estimates = []
 		theta = np.random.multivariate_normal(np.squeeze(self.mu), self.v2*np.linalg.inv(self.B))
 		theta = np.expand_dims(theta, axis=1)
 		for a in range(self.num_actions):
 			if self.counts[a] < self.num_force:
 				self.counts[a] += 1.0
-				self.train(x, y, a)
-				return a 
+				y_hat = 0.0
+				self.train(x, y, a, 0.0)
+				return self.return_binner(a, y_hat)
 
 			x_a = np.outer(self.actions[a], x).flatten()
 			x_a = np.expand_dims(x_a, axis=1).astype(float)
 			r_estimates.append(np.matmul(theta.T, x_a))
 		a = np.argmax(r_estimates)
-		self.train(x, y, a)
-		return a 
+		y_hat = r_estimates[a]
+		self.train(x, y, a, y_hat)
+		return self.return_binner(a, y_hat)
 
 
-	def train(self, x, y, a):
+	def train(self, x, y, a, y_hat):
 		x_a = np.outer(self.actions[a], x).flatten()
 		x_a = np.expand_dims(x_a, axis=1).astype(float)
 		self.B += np.matmul(x_a, x_a.T) 
-		self.f += self.reward(y, a)*x_a
+		self.f += self.reward(y, a, y_hat)*x_a
 		self.mu = np.matmul(np.linalg.inv(self.B), self.f)
 
 
-	def reward(self, y, a):
-		if y == a:
-			return 0
-		else:
-			return -1
 
 
 class ThompsonDNet(Model):
-	def __init__(self, bin_weekly_dose, num_actions=3, R=0.5, delta=0.1, epsilon=1.0/np.log(1000), num_force=0.0):
-		super().__init__(bin_weekly_dose)
+	def __init__(self, bin_weekly_dose, num_actions=3, R=0.5, delta=0.1, epsilon=1.0/np.log(1000), num_force=0.0, feature_group=0):
+		super().__init__(bin_weekly_dose, feature_group=0)
 		#self.feature_columns = ["Age in decades", "Height in cm", "Weight in kg", "VKORC1 A/G", "VKORC1 A/A", "VKORC1 genotype unknown", "CYP2C9 *1/*2", "CYP2C9 *1/*3", "CYP2C9*2/*2", "CYP2C9*2/*3", "CYP2C9*3/*3", "CYP2C9 genotype unknown", "Asian race", "Black or African American", "Missing or Mixed race", "Enzyme inducer status", "Amiodarone status"]
 
 		self.dim = len(self.feature_columns) +1 
@@ -97,32 +94,29 @@ class ThompsonDNet(Model):
 		x = np.append(x, 1.0) 
 		x.astype(float)
 		x = np.expand_dims(x, axis=1).astype(float)
-		y.astype(int)
+		# y.astype(int)
 		r_estimates = []
 		for a in range(self.num_actions):
 			if self.counts[a] < self.num_force:
 				self.counts[a] += 1.0
-				self.train(x, y, a)
-				return a 
+				y_hat = 0.0
+				self.train(x, y, a, 0.0)
+				return self.return_binner(a, y_hat)
 
 			theta = np.random.multivariate_normal(np.squeeze(self.mu[a]), self.v2*np.linalg.inv(self.B[a]))
 			theta = np.expand_dims(theta, axis=1)
 			r_estimates.append(np.matmul(theta.T, x))
 		a = np.argmax(r_estimates)
-		self.train(x, y, a)
-		return a 
+		y_hat = r_estimates[a]
+		self.train(x, y, a, y_hat)
+		return self.return_binner(a, y_hat)
 
 
-	def train(self, x, y, a):
+	def train(self, x, y, a, y_hat):
 		x.astype(float)
 		self.B[a] += np.matmul(x, x.T) 
-		self.f[a] += self.reward(y, a)*x
+		self.f[a] += self.reward(y, a, y_hat)*x
 		self.mu[a] = np.matmul(np.linalg.inv(self.B[a]), self.f[a])
 
 
-	def reward(self, y, a):
-		if y == a:
-			return 0
-		else:
-			return -1
 

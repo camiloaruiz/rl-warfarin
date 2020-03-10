@@ -4,7 +4,7 @@ import pandas as pd
 
 
 class Model():
-	def __init__(self, bin_weekly_dose=3, n_features=20):
+	def __init__(self, bin_weekly_dose=3, feature_group=0):
 		self.bin_weekly_dose = bin_weekly_dose
 		if (self.bin_weekly_dose>=2):
 			self.out_column = "Binned weekly warfarin dose"
@@ -17,15 +17,12 @@ class Model():
 		#self.feature_columns = ['Weight in kg', 'VKORC1_1542_CC', 'VKORC1 A/A', 'Asian race', 'Height in cm', 'Black or African American', 'Smoker', 'Age in decades', 'CYP2C9 *1/*3', 'VKORC1_497_TT', 'White race', 'Enzyme inducer status', 'VKORC1 A/G', 'VKORC1_1542_CG', 'CYP2C9*2/*3', 'VKORC1_497_GG', 'Diabetes', 'VKORC1_1542_NA', 'Aspirin', 'VKORC1 genotype unknown', 'VKORC1_4451_CC', 'CYP2C9 *1/*2', 'VKORC1_4451_AC', 'Simvastatin', 'VKORC1_497_unknown', 'VKORC1_4451_AA', 'Amiodarone status', 'Congestive Heart Failure', 'CYP2C9 *1/*1', 'VKORC1_4451_NA', 'VKORC1_497_GT', 'Valve replacement', 'CYP2C9*3/*3', 'is Female', 'Missing or Mixed race', 'is Male', 'CYP2C9*2/*2', 'unknown Gender', 'CYP2C9 genotype unknown']
 		
 		
-		#correlation with rewards instead
-		# self.feature_columns = ['Weight in kg', 'VKORC1 A/G', 'Enzyme inducer status', 'Black or African American', 'VKORC1 G/G', 'VKORC1_497_GT', 'Age in decades', 'CYP2C9 *1/*2', 'Missing or Mixed race', 'VKORC1_1542_CG', 'VKORC1_1542_GG', 'Amiodarone status', 'White race', 'Congestive Heart Failure', 'CYP2C9 *1/*3', 'CYP2C9*2/*3', 'VKORC1_497_GG', 'VKORC1_497_TT', 'Smoker', 'Diabetes', 'VKORC1 A/A', 'Asian race', 'Aspirin', 'CYP2C9 *1/*1', 'Valve replacement', 'CYP2C9*3/*3', 'VKORC1_4451_CC', 'VKORC1_4451_AC', 'Height in cm', 'VKORC1_4451_AA', 'VKORC1_1542_CC', 'CYP2C9*2/*2', 'is Female', 'Simvastatin', 'is Male']				
-		
-		#self.feature_columns = self.feature_columns[:n_features]
-		
-		
-		#original columns
-		self.feature_columns = ["Age in decades", "Height in cm", "Weight in kg", "VKORC1 A/G", "VKORC1 A/A", "VKORC1 genotype unknown", "CYP2C9 *1/*2", "CYP2C9 *1/*3", "CYP2C9*2/*2", "CYP2C9*2/*3", "CYP2C9*3/*3", "CYP2C9 genotype unknown", "Asian race", "Black or African American", "Missing or Mixed race", "Enzyme inducer status", "Amiodarone status"]
-		# self.feature_columns = ["Age in decades", "Height in cm", "Weight in kg", "VKORC1 genotype unknown", "CYP2C9 *1/*2", "CYP2C9 *1/*3", "CYP2C9*2/*2", "CYP2C9*2/*3", "CYP2C9*3/*3", "CYP2C9 genotype unknown", "Asian race", "Black or African American", "Missing or Mixed race", "Enzyme inducer status", "Amiodarone status"]
+		if feature_group==0:
+			# wpda
+			self.feature_columns = ["Age in decades", "Height in cm", "Weight in kg", "VKORC1 A/G", "VKORC1 A/A", "VKORC1 genotype unknown", "CYP2C9 *1/*2", "CYP2C9 *1/*3", "CYP2C9*2/*2", "CYP2C9*2/*3", "CYP2C9*3/*3", "CYP2C9 genotype unknown", "Asian race", "Black or African American", "Missing or Mixed race", "Enzyme inducer status", "Amiodarone status"]
+		else:
+			# almost all of them 
+			self.feature_columns = ['Weight in kg', 'VKORC1 A/G', 'Enzyme inducer status', 'Black or African American', 'VKORC1 G/G', 'VKORC1_497_GT', 'Age in decades', 'CYP2C9 *1/*2', 'Missing or Mixed race', 'VKORC1_1542_CG', 'VKORC1_1542_GG', 'Amiodarone status', 'White race', 'Congestive Heart Failure', 'CYP2C9 *1/*3', 'CYP2C9*2/*3', 'VKORC1_497_GG', 'VKORC1_497_TT', 'Smoker', 'Diabetes', 'VKORC1 A/A', 'Asian race', 'Aspirin', 'CYP2C9 *1/*1', 'Valve replacement', 'CYP2C9*3/*3', 'VKORC1_4451_CC', 'VKORC1_4451_AC', 'Height in cm', 'VKORC1_4451_AA', 'VKORC1_1542_CC', 'CYP2C9*2/*2', 'is Female', 'Simvastatin', 'is Male']				
 
 
 
@@ -66,6 +63,24 @@ class Model():
 
 	def train(self, x, y):
 		raise NotImplementedError
+
+	# For training 
+	def reward(self, y, a, y_hat):
+		if self.num_actions == 1:
+			return y - float(y_hat)
+		else:
+			if y == a:
+				return 0.0
+			else:
+				return -1.0
+
+	# For training 
+	def return_binner(self, a, y_hat):
+		if self.num_actions == 1:
+			# print(type(y_hat.item()))
+			return float(y_hat)
+		else:
+			return a
 
 
 	# y is the binned y value of 0,1,2,etc
@@ -121,12 +136,37 @@ class Model():
 			regret_step.append(r)
 		return np.cumsum(regret_step)
 
+	def observed_regret(self, a_star_a_hat):
+		regret_step = []
+		for i, (a_star, a_hat) in enumerate(a_star_a_hat):
+			if a_star == a_hat:
+				r = 0.0
+			else: 
+				r = 1.0
+			regret_step.append(r)
+		return np.cumsum(regret_step)
+
+	def non_binned_regret(self, a_star_a_hat):
+		regret_step = []
+		for i, (a_star, a_hat) in enumerate(a_star_a_hat):
+			r = np.abs(a_star-a_hat)
+			regret_step.append(r)
+		return np.cumsum(regret_step)
+
 
 	def calc_frac_incorrect(self, a_star_a_hat):
 		frac_incorrect = []
 		a_star, a_hat = map(list, zip(*a_star_a_hat))
 		for i in range(1, len(a_star_a_hat)+1):
 			frac_incorrect.append((1.0 - np.mean(np.equal(a_star[:i], a_hat[:i])) ))
+		return frac_incorrect
+
+	def non_binned_calc_frac_incorrect(self, a_star_a_hat):
+		frac_incorrect = []
+		a_star, a_hat = map(list, zip(*a_star_a_hat))
+		for i in range(1, len(a_star_a_hat)+1):
+			frac_incorrect.append(np.mean(np.abs(np.array(a_star[:i])-np.array(a_hat[:i]))))
+			# frac_incorrect.append(np.mean(np.abs(np.array(a_star[:i])-np.array(a_hat[:i]))/np.array(a_star[:i])))
 		return frac_incorrect
 
 
