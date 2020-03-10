@@ -35,25 +35,6 @@ def plot_combined(scalar_results):
 	plt.plot(xs, ys)
 	plt.show()
 
-def plot_individually(run_results):
-	xs = [step for step, value in run_results]
-	ys = [value for step, value in run_results]
-	plt.plot(xs, ys)
-
-def plot(results_list, names, title, combine, plots_dir):
-	plt.figure()
-	plt.title(title)
-	plt.xlabel('Step')
-	for results in results_list:
-		if combine:
-			plot_combined(results)
-		else:
-			plot_individually(results)
-	suffix = '_combined' if combine else '_individual'
-	save_path = plots_dir / (title + suffix + '.png')
-	plt.legend(names)
-	plt.savefig(str(save_path))
-
 
 def str2bool(v):
 	if isinstance(v, bool):
@@ -120,13 +101,9 @@ if __name__ == "__main__":
 
 	# Get data
 	wf = WarfarinLoader(na_val=np.nan,fill_na_mean=False,stable_dose_only=True)
-
-
-
-
+	
 	all_a_star_a_hat = []
 	all_regret, all_frac_incorrect = [],[]
-	final_regret,final_incorrect = [],[]
 	for trial in range(args.num_trials):
 		model = get_model(args)
 
@@ -137,11 +114,13 @@ if __name__ == "__main__":
 		all_a_star_a_hat.append(a_star_a_hat)
 		all_frac_incorrect.append(cum_frac_incorrect)
 		all_regret.append(cum_regret)
-		final_regret.append(cum_regret[-1])
-		final_incorrect.append(cum_frac_incorrect[-1])
-        
-	print (args.model, "Averaged Frac-Incorrect / Final Regret: ", np.mean(final_incorrect), np.mean(final_regret) )
+	
+	avg_frac_incorrect = np.mean(all_frac_incorrect, axis=1)
+	avg_regret = np.mean(all_regret, axis=1)
+	
 
+	print (args.model, "Averaged Frac-Incorrect / Final Regret: ", avg_frac_incorrect[-1], avg_regret[-1])
+	plot_combined(all_frac_incorrect)
 
 
 
