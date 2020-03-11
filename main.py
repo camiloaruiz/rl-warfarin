@@ -1,3 +1,6 @@
+import os
+os.environ['OPENBLAS_NUM_THREADS'] = '1'
+
 import argparse
 from model.wpda import WPDA
 from model.wcda import WCDA
