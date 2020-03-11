@@ -65,7 +65,6 @@ def parse_args():
 	parser.add_argument('--feature_group', type=int, nargs = "?", default=0)
 	parser.add_argument("--nan_val_0", type=str2bool, nargs='?', const=True, default=False, help="Activate nan replaced to 0 mode.")
 
-
 	args = parser.parse_args()
 	return args
 
@@ -95,9 +94,7 @@ def get_model(args):
 	# Prepare data
 	model.featurize(wf)
 	model.prepare_XY()
-	return model 
-
-
+	return model
 
 if __name__ == "__main__":
 	args = parse_args()
@@ -143,7 +140,7 @@ if __name__ == "__main__":
 
 
 	print (name)
-	print (args.model, "Averaged Frac-Incorrect / Final Regret expected / Final Regret observed ", avg_frac_incorrect[-1], avg_regret_expected[-1], avg_regret_observed[-1])
+	# print (args.model, "Averaged Frac-Incorrect / Final Regret expected / Final Regret observed ", avg_frac_incorrect[-1], avg_regret_expected[-1], avg_regret_observed[-1])
 	# plot_combined(all_frac_incorrect)
 	# plot_combined(all_regret_expected)
 	# plot_combined(all_regret_observed)
@@ -151,11 +148,11 @@ if __name__ == "__main__":
 
 
 	#Code for adams plotting functions
-	np.save("data/"+ name+"__a_star_a_hat",all_a_star_a_hat)
-	np.save("data/"+ name+"__regret_expected",all_regret_expected)
-	np.save("data/"+ name+"__regret_observed",all_regret_observed)
-	np.save("data/"+ name+"__frac_incorrect",all_frac_incorrect)
-	np.save("data/"+ name+"__frac_correct",all_frac_correct)
+	np.save("data/buckets/" + name+"__a_star_a_hat",all_a_star_a_hat)
+	np.save("data/buckets/" + name+"__regret_expected",all_regret_expected)
+	np.save("data/buckets/" + name+"__regret_observed",all_regret_observed)
+	np.save("data/buckets/" + name+"__frac_incorrect",all_frac_incorrect)
+	np.save("data/buckets/" + name+"__frac_correct",all_frac_correct)
 
 
 	#plot_combined(all_frac_incorrect)

@@ -1,0 +1,51 @@
+#!/bin/bash
+
+python main.py --model fixed_dose --num_trials 30 --bin_weekly_dose 1
+python main.py --model wcda --num_trials 30 --bin_weekly_dose 1 
+python main.py --model wpda --num_trials 30 --bin_weekly_dose 1 
+python main.py --model UCBNet --num_trials 30 --bin_weekly_dose 1 
+python main.py --model UCBDNet --num_trials 30 --bin_weekly_dose 1 
+python main.py --model ThompsonNet --num_trials 30 --bin_weekly_dose 1 
+python main.py --model ThompsonDNet --num_trials 30 --bin_weekly_dose 1 
+python main.py --model eGreedy --num_trials 30 --bin_weekly_dose 1 
+python main.py --model eGreedyD --num_trials 30 --bin_weekly_dose 1 
+
+python main.py --model fixed_dose --num_trials 30 --bin_weekly_dose 2 
+python main.py --model wcda --num_trials 30 --bin_weekly_dose 2 
+python main.py --model wpda --num_trials 30 --bin_weekly_dose 2 
+python main.py --model UCBNet --num_trials 30 --bin_weekly_dose 2 
+python main.py --model UCBDNet --num_trials 30 --bin_weekly_dose 2 
+python main.py --model ThompsonNet --num_trials 30 --bin_weekly_dose 2 
+python main.py --model ThompsonDNet --num_trials 30 --bin_weekly_dose 2 
+python main.py --model eGreedy --num_trials 30 --bin_weekly_dose 2 
+python main.py --model eGreedyD --num_trials 30 --bin_weekly_dose 2 
+
+python main.py --model fixed_dose --num_trials 30 --bin_weekly_dose 3 
+python main.py --model wcda --num_trials 30 --bin_weekly_dose 3 
+python main.py --model wpda --num_trials 30 --bin_weekly_dose 3 
+python main.py --model UCBNet --num_trials 30 --bin_weekly_dose 3 
+python main.py --model UCBDNet --num_trials 30 --bin_weekly_dose 3 
+python main.py --model ThompsonNet --num_trials 30 --bin_weekly_dose 3 
+python main.py --model ThompsonDNet --num_trials 30 --bin_weekly_dose 3 
+python main.py --model eGreedy --num_trials 30 --bin_weekly_dose 3 
+python main.py --model eGreedyD --num_trials 30 --bin_weekly_dose 3  
+
+python main.py --model fixed_dose --num_trials 30 --bin_weekly_dose 4 
+python main.py --model wcda --num_trials 30 --bin_weekly_dose 4 
+python main.py --model wpda --num_trials 30 --bin_weekly_dose 4 
+python main.py --model UCBNet --num_trials 30 --bin_weekly_dose 4 
+python main.py --model UCBDNet --num_trials 30 --bin_weekly_dose 4 
+python main.py --model ThompsonNet --num_trials 30 --bin_weekly_dose 4 
+python main.py --model ThompsonDNet --num_trials 30 --bin_weekly_dose 4 
+python main.py --model eGreedy --num_trials 30 --bin_weekly_dose 4 
+python main.py --model eGreedyD --num_trials 30 --bin_weekly_dose 4 
+
+python main.py --model fixed_dose --num_trials 30 --bin_weekly_dose 5 
+python main.py --model wcda --num_trials 30 --bin_weekly_dose 5 
+python main.py --model wpda --num_trials 30 --bin_weekly_dose 5 
+python main.py --model UCBNet --num_trials 30 --bin_weekly_dose 5 
+python main.py --model UCBDNet --num_trials 30 --bin_weekly_dose 5 
+python main.py --model ThompsonNet --num_trials 30 --bin_weekly_dose 5 
+python main.py --model ThompsonDNet --num_trials 30 --bin_weekly_dose 5 
+python main.py --model eGreedy --num_trials 30 --bin_weekly_dose 5 
+python main.py --model eGreedyD --num_trials 30 --bin_weekly_dose 5 

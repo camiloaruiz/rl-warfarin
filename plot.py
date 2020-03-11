@@ -127,8 +127,15 @@ def plot_combined(scalar_results):
 	xs = sorted(points.keys())
 	values = np.array([points[x] for x in xs])
 	ys = np.mean(values, axis=1)
-	yerrs = stats.sem(values, axis=1)
-	plt.fill_between(xs, ys - yerrs, ys + yerrs, alpha=0.25)
+	
+	## Prior with standard error of mean
+	# yerrs = stats.sem(values, axis=1)
+	# plt.fill_between(xs, ys - yerrs, ys + yerrs, alpha=0.25)
+
+	## Now with standard deviation
+	yerrs = stats.tstd(values, limits = None, axis = 1)
+	plt.fill_between(xs, ys - 1.96*yerrs, ys + 1.96*yerrs, alpha=0.25)
+	
 	plt.plot(xs, ys)
 	
 
