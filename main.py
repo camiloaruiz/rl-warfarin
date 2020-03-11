@@ -1,3 +1,6 @@
+import os
+os.environ['OPENBLAS_NUM_THREADS'] = '1'
+
 import argparse
 from model.wpda import WPDA
 from model.wcda import WCDA
@@ -148,11 +151,11 @@ if __name__ == "__main__":
 
 
 	#Code for adams plotting functions
-	np.save("data/buckets/" + name+"__a_star_a_hat",all_a_star_a_hat)
-	np.save("data/buckets/" + name+"__regret_expected",all_regret_expected)
-	np.save("data/buckets/" + name+"__regret_observed",all_regret_observed)
-	np.save("data/buckets/" + name+"__frac_incorrect",all_frac_incorrect)
-	np.save("data/buckets/" + name+"__frac_correct",all_frac_correct)
+	np.save("/dfs/scratch1/caruiz/CS234/" + name+"__a_star_a_hat",all_a_star_a_hat)
+	np.save("/dfs/scratch1/caruiz/CS234/" + name+"__regret_expected",all_regret_expected)
+	np.save("/dfs/scratch1/caruiz/CS234/" + name+"__regret_observed",all_regret_observed)
+	np.save("/dfs/scratch1/caruiz/CS234/" + name+"__frac_incorrect",all_frac_incorrect)
+	np.save("/dfs/scratch1/caruiz/CS234/" + name+"__frac_correct",all_frac_correct)
 
 
 	#plot_combined(all_frac_incorrect)
