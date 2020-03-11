@@ -237,14 +237,14 @@ if __name__ == "__main__":
 	names = ["fixed_dose","wcda","wpda","UCBNet","ThompsonNet","eGreedy"]
 	for name in [name1, name2, name3, name7, name8, name9,]:
 		data.append(load_(name)[3])
-	plot(results_list=data, names=names, title="Baseline NaN removed; wpda features", xlabel="patient", ylabel="Expected Regret", combine=True, figsize = plot_params["figsize"], extension = plot_params["extension"], fontsize = plot_params["fontsize"], x_major_tick_locator = plot_params["patient"]["x_major_tick_locator"], x_minor_tick_locator = plot_params["patient"]["x_minor_tick_locator"], y_major_tick_locator = plot_params["expected_regret_big"]["y_major_tick_locator"], y_minor_tick_locator = plot_params["expected_regret_big"]["y_minor_tick_locator"], major_tick_len = plot_params["major_tick_len"], minor_tick_len = plot_params["minor_tick_len"])
+	plot(results_list=data, names=names, title="Expected Regret NaN removed; wpda features", xlabel="patient", ylabel="Expected Regret", combine=True, figsize = plot_params["figsize"], extension = plot_params["extension"], fontsize = plot_params["fontsize"], x_major_tick_locator = plot_params["patient"]["x_major_tick_locator"], x_minor_tick_locator = plot_params["patient"]["x_minor_tick_locator"], y_major_tick_locator = plot_params["expected_regret_big"]["y_major_tick_locator"], y_minor_tick_locator = plot_params["expected_regret_big"]["y_minor_tick_locator"], major_tick_len = plot_params["major_tick_len"], minor_tick_len = plot_params["minor_tick_len"])
 
 	## Baseline NaN removed; WPDA features; Oracle Regret
 	data = []
 	names = ["fixed_dose","wcda","wpda","UCBNet","ThompsonNet","eGreedy"]
 	for name in [name1, name2, name3, name7, name8, name9,]:
 		data.append(load_(name)[4])
-	plot(results_list=data, names=names, title="Baseline NaN removed; wpda features", xlabel="patient", ylabel="Oracle Regret", combine=True, figsize = plot_params["figsize"], extension = plot_params["extension"], fontsize = plot_params["fontsize"], x_major_tick_locator = plot_params["patient"]["x_major_tick_locator"], x_minor_tick_locator = plot_params["patient"]["x_minor_tick_locator"], y_major_tick_locator = plot_params["oracle_regret"]["y_major_tick_locator"], y_minor_tick_locator = plot_params["oracle_regret"]["y_minor_tick_locator"], major_tick_len = plot_params["major_tick_len"], minor_tick_len = plot_params["minor_tick_len"])
+	plot(results_list=data, names=names, title="Oracle Regret NaN removed; wpda features", xlabel="patient", ylabel="Oracle Regret", combine=True, figsize = plot_params["figsize"], extension = plot_params["extension"], fontsize = plot_params["fontsize"], x_major_tick_locator = plot_params["patient"]["x_major_tick_locator"], x_minor_tick_locator = plot_params["patient"]["x_minor_tick_locator"], y_major_tick_locator = plot_params["oracle_regret"]["y_major_tick_locator"], y_minor_tick_locator = plot_params["oracle_regret"]["y_minor_tick_locator"], major_tick_len = plot_params["major_tick_len"], minor_tick_len = plot_params["minor_tick_len"])
 
 
 	# Hyperparameter sensitivity
