@@ -53,7 +53,7 @@ def parse_args():
 	parser = argparse.ArgumentParser(description = "Runs experiment for warfarin dose prediction")
 	parser.add_argument('--model', type = str, choices = ["fixed_dose", "wpda", "wcda","UCBNet", "UCBDNet", "ThompsonNet", "ThompsonDNet","eGreedy","eGreedyD"], required=True)
 	parser.add_argument('--bin_weekly_dose', type=int,  choices =[1,2,3,4,5], default=3)
-	parser.add_argument('--bound_constant', type=float, nargs = "?", default=2.0)
+	parser.add_argument('--bound_constant', type=float, nargs = "?", default=1.0)
 	parser.add_argument('--num_force', type=int, nargs = "?", default=1)
 	parser.add_argument('--num_force_TH', type=int, nargs = "?", default=0)
 	parser.add_argument('--R', type=float, nargs = "?", default=0.0005)

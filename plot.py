@@ -239,11 +239,11 @@ if __name__ == "__main__":
 
 
 
-	# data = []
-	# names = ["0.5","1.0","1.5","2.0","2.5"]
-	# for name in [name19, name20, name21, name22, name23]:
-	# 	data.append(load_(name)[1])
-	# plot(results_list=data, names=names, title="Linear alpha search", xlabel="patient", ylabel="Frac Incorrect", combine=True)
+	data = []
+	names = ["0.5","1.0","1.5","2.0","2.5"]
+	for name in [name19, name20, name21, name22, name23]:
+		data.append(load_(name)[1])
+	plot(results_list=data, names=names, title="Linear alpha search", xlabel="patient", ylabel="Frac Incorrect", combine=True)
 
 
 	# data = []
@@ -253,19 +253,13 @@ if __name__ == "__main__":
 	# plot(results_list=data, names=names, title="Thompson R search", xlabel="patient", ylabel="Expected Regret", combine=True)
 
 
-	data = []
-	names = ["0.1, 0", "0.1, 0.5", "0.1, 1", "0.1, 2", "0.2, 0.5", "0.2, 1","0.2, 2"]
-	for name in [name30, name31, name32, name33, name34, name35, name36]:
-		data.append(load_(name)[1])
-	plot(results_list=data, names=names, title="eGreedy E and decay rate search", xlabel="patient", ylabel="Expected Regret", combine=True)
+	# data = []
+	# names = ["0.1, 0", "0.1, 0.5", "0.1, 1", "0.1, 2", "0.2, 0.5", "0.2, 1","0.2, 2"]
+	# for name in [name30, name31, name32, name33, name34, name35, name36]:
+	# 	data.append(load_(name)[1])
+	# plot(results_list=data, names=names, title="eGreedy E and decay rate search", xlabel="patient", ylabel="Expected Regret", combine=True)
 
 
-
-	data = []
-	names = ["Stacked","Discrete"]
-	for name in [name27, name37]:
-		data.append(load_(name)[1])
-	plot(results_list=data, names=names, title="Thompson R search", xlabel="patient", ylabel="Expected Regret", combine=True)
 
 
 
