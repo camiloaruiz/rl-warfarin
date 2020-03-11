@@ -233,14 +233,14 @@ if __name__ == "__main__":
 	names = ["fixed_dose","wcda","wpda","UCBNet","ThompsonNet","eGreedy"]
 	for name in [name1, name2, name3, name7, name8, name9,]:
 		data.append(load_(name)[3])
-	plot(results_list=data, names=names, title="Baseline NaN removed; wpda features", xlabel="patient", ylabel="Expected Regret", combine=True)
+	plot(results_list=data, names=names, title="Baseline NaN removed; wpda features", xlabel="patient", ylabel="Expected Regret", combine=True, figsize = plot_params["figsize"], extension = plot_params["extension"], fontsize = plot_params["fontsize"])
 
 	## Baseline NaN removed; WPDA features; Oracle Regret
 	data = []
 	names = ["fixed_dose","wcda","wpda","UCBNet","ThompsonNet","eGreedy"]
 	for name in [name1, name2, name3, name7, name8, name9,]:
 		data.append(load_(name)[4])
-	plot(results_list=data, names=names, title="Baseline NaN removed; wpda features", xlabel="patient", ylabel="Oracle Regret", combine=True)
+	plot(results_list=data, names=names, title="Baseline NaN removed; wpda features", xlabel="patient", ylabel="Oracle Regret", combine=True, figsize = plot_params["figsize"], extension = plot_params["extension"], fontsize = plot_params["fontsize"])
 
 
 	# Hyperparameter sensitivity
@@ -249,23 +249,18 @@ if __name__ == "__main__":
 	names = ["0.5","1.0","1.5","2.0","2.5"]
 	for name in [name19, name20, name21, name22, name23]:
 		data.append(load_(name)[1])
-	plot(results_list=data, names=names, title="Linear alpha search", xlabel="patient", ylabel="Frac Incorrect", combine=True)
+	plot(results_list=data, names=names, title="Linear alpha search", xlabel="patient", ylabel="Frac Incorrect", combine=True, figsize = plot_params["figsize"], extension = plot_params["extension"], fontsize = plot_params["fontsize"])
 
 	## Thompson R Search
 	data = []
 	names = ["0.005","0.001","0.0005","0.0001","0.00005"]
 	for name in [name25, name26, name27, name28, name29]:
 		data.append(load_(name)[1])
-	plot(results_list=data, names=names, title="Thompson R search", xlabel="patient", ylabel="Expected Regret", combine=True)
+	plot(results_list=data, names=names, title="Thompson R search", xlabel="patient", ylabel="Expected Regret", combine=True, figsize = plot_params["figsize"], extension = plot_params["extension"], fontsize = plot_params["fontsize"])
 
 	## eGreedy E and Decay Rate Search
 	data = []
 	names = ["0.1, 0", "0.1, 0.5", "0.1, 1", "0.1, 2", "0.2, 0.5", "0.2, 1","0.2, 2"]
 	for name in [name30, name31, name32, name33, name34, name35, name36]:
 		data.append(load_(name)[1])
-	plot(results_list=data, names=names, title="eGreedy E and decay rate search", xlabel="patient", ylabel="Expected Regret", combine=True)
-
-
-
-
-
+	plot(results_list=data, names=names, title="eGreedy E and decay rate search", xlabel="patient", ylabel="Expected Regret", combine=True, figsize = plot_params["figsize"], extension = plot_params["extension"], fontsize = plot_params["fontsize"])
