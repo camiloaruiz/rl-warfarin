@@ -113,6 +113,9 @@ name35 = "model=eGreedy__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num
 name36 = "model=eGreedy__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.2__e_scale=2.0__feature_group=0__nan_val_0=False"
 
 
+# python main.py --model ThompsonDNet --R 0.0005 --feature_group 0
+name37 = "model=ThompsonDNet__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
+
 
 
 
@@ -236,19 +239,33 @@ if __name__ == "__main__":
 
 
 
+	# data = []
+	# names = ["0.5","1.0","1.5","2.0","2.5"]
+	# for name in [name19, name20, name21, name22, name23]:
+	# 	data.append(load_(name)[1])
+	# plot(results_list=data, names=names, title="Linear alpha search", xlabel="patient", ylabel="Frac Incorrect", combine=True)
+
+
+	# data = []
+	# names = ["0.005","0.001","0.0005","0.0001","0.00005"]
+	# for name in [name25, name26, name27, name28, name29]:
+	# 	data.append(load_(name)[1])
+	# plot(results_list=data, names=names, title="Thompson R search", xlabel="patient", ylabel="Expected Regret", combine=True)
+
+
 	data = []
-	names = ["0.5","1.0","1.5","2.0","2.5"]
-	for name in [name19, name20, name21, name22, name23]:
+	names = ["0.1, 0", "0.1, 0.5", "0.1, 1", "0.1, 2", "0.2, 0.5", "0.2, 1","0.2, 2"]
+	for name in [name30, name31, name32, name33, name34, name35, name36]:
 		data.append(load_(name)[1])
-	plot(results_list=data, names=names, title="Linear alpha search", xlabel="patient", ylabel="Frac Incorrect", combine=True)
+	plot(results_list=data, names=names, title="eGreedy E and decay rate search", xlabel="patient", ylabel="Expected Regret", combine=True)
+
 
 
 	data = []
-	names = ["0.005","0.001","0.0005","0.0001","0.00005"]
-	for name in [name25, name26, name27, name28, name29]:
+	names = ["Stacked","Discrete"]
+	for name in [name27, name37]:
 		data.append(load_(name)[1])
 	plot(results_list=data, names=names, title="Thompson R search", xlabel="patient", ylabel="Expected Regret", combine=True)
-
 
 
 
