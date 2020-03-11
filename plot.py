@@ -15,7 +15,7 @@ from scipy.stats.stats import pearsonr
 import sys
 
 
-import matplotlib; matplotlib.use('TkAgg')
+# import matplotlib; matplotlib.use('TkAgg')
 #import matplotlib; matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
@@ -85,21 +85,27 @@ def plot_individually(run_results):
 	ys = [value for step, value in run_results]
 	plt.plot(xs, ys)
 
-def plot(results_list, names, title,xlabel, ylabel, combine, plots_dir="plot/"):
-	plt.figure()
-	plt.title(title)
-	plt.xlabel(xlabel)
-	plt.ylabel(ylabel)
+def plot(results_list, names, title,xlabel, ylabel, combine, figsize, extension, fontsize, plots_dir="plot/"):
+	plt.figure(figsize = figsize)
+	# Plot Data
 	for results in results_list:
 		if combine:
 			plot_combined(results)
 		else:
 			plot_individually(results)
+
+	# Title, Axes, Tick Marks, Legend
+	plt.title(title, fontsize = fontsize)
+	plt.xlabel(xlabel, fontsize = fontsize)
+	plt.ylabel(ylabel, fontsize = fontsize)	
+	plt.tick_params(axis='both', which='major', labelsize=fontsize)
+	plt.tick_params(axis='both', which='minor', labelsize=fontsize)
+	plt.legend(names, fontsize = fontsize)
+
+	# Save
 	suffix = '_combined' if combine else '_individual'
-	save_path = plots_dir+title.replace(" ","_") + suffix + '.png'
-	plt.legend(names)
-	plt.show()
-	plt.savefig(str(save_path))
+	save_path = plots_dir+title.replace(" ","_") + suffix + extension
+	plt.savefig(str(save_path), bbox_inches = "tight")
 
 def load_(name):
 	all_a_star_a_hat = np.load("data/"+ name +"__a_star_a_hat.npy")
@@ -112,18 +118,20 @@ def load_(name):
 
 
 if __name__ == "__main__":
+	# Plotting Parameters
+	plot_params = {"figsize": (5, 5), "extension": ".pdf", "fontsize": 8}
 
 	data = []
 	names = ["fixed_dose","wcda","wpda"]
 	for name in [name1, name2, name3]:
 		data.append(load_(name)[2])
-	plot(results_list=data, names=names, title="Baseline NaN removed", xlabel="patient", ylabel="Frac Correct", combine=True)
+	plot(results_list=data, names=names, title="Baseline NaN removed", xlabel="patient", ylabel="Frac Correct", combine=True, figsize = plot_params["figsize"], extension = plot_params["extension"], fontsize = plot_params["fontsize"])
 
 	data = []
 	names = ["fixed_dose","wcda","wpda"]
 	for name in [name4, name5, name6]:
 		data.append(load_(name)[2])
-	plot(results_list=data, names=names, title="Baseline NaN replced with 0", xlabel="patient", ylabel="Frac Correct", combine=True)
+	plot(results_list=data, names=names, title="Baseline NaN replced with 0", xlabel="patient", ylabel="Frac Correct", combine=True, figsize = plot_params["figsize"], extension = plot_params["extension"], fontsize = plot_params["fontsize"])
 
 
 
@@ -132,13 +140,13 @@ if __name__ == "__main__":
 	names = ["fixed_dose","wcda","wpda","UCBNet","ThompsonNet","eGreedy"]
 	for name in [name1, name2, name3, name7, name8, name9,]:
 		data.append(load_(name)[1])
-	plot(results_list=data, names=names, title="Baseline NaN removed; wpda features", xlabel="patient", ylabel="Frac Incorrect", combine=True)
+	plot(results_list=data, names=names, title="Baseline NaN removed; wpda features", xlabel="patient", ylabel="Frac Incorrect", combine=True, figsize = plot_params["figsize"], extension = plot_params["extension"], fontsize = plot_params["fontsize"])
 
 	data = []
 	names = ["fixed_dose","wcda","wpda","UCBNet","ThompsonNet","eGreedy"]
 	for name in [name4, name5, name6, name10, name11, name12]:
 		data.append(load_(name)[1])
-	plot(results_list=data, names=names, title="Baseline NaN replced with 0; wpda features", xlabel="patient", ylabel="Frac Incorrect", combine=True)
+	plot(results_list=data, names=names, title="Baseline NaN replced with 0; wpda features", xlabel="patient", ylabel="Frac Incorrect", combine=True, figsize = plot_params["figsize"], extension = plot_params["extension"], fontsize = plot_params["fontsize"])
 
 
 
@@ -148,13 +156,13 @@ if __name__ == "__main__":
 	names = ["fixed_dose","wcda","wpda","UCBNet","ThompsonNet","eGreedy"]
 	for name in [name1, name2, name3, name13, name14, name15]:
 		data.append(load_(name)[1])
-	plot(results_list=data, names=names, title="Baseline NaN removed; All features", xlabel="patient", ylabel="Frac Incorrect", combine=True)
+	plot(results_list=data, names=names, title="Baseline NaN removed; All features", xlabel="patient", ylabel="Frac Incorrect", combine=True, figsize = plot_params["figsize"], extension = plot_params["extension"], fontsize = plot_params["fontsize"])
 
 	data = []
 	names = ["fixed_dose","wcda","wpda","UCBNet","ThompsonNet","eGreedy"]
 	for name in [name4, name5, name6, name16, name17, name18]:
 		data.append(load_(name)[1])
-	plot(results_list=data, names=names, title="Baseline NaN replced with; All features", xlabel="patient", ylabel="Frac Incorrect", combine=True)
+	plot(results_list=data, names=names, title="Baseline NaN replced with; All features", xlabel="patient", ylabel="Frac Incorrect", combine=True, figsize = plot_params["figsize"], extension = plot_params["extension"], fontsize = plot_params["fontsize"])
 
 
 
