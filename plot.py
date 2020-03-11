@@ -19,8 +19,7 @@ import matplotlib.ticker
 # import matplotlib; matplotlib.use('TkAgg')
 #import matplotlib; matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-
-
+import os
 
 
 # python main.py --model fixed_dose 
@@ -180,15 +179,29 @@ def plot(results_list, names, title,xlabel, ylabel, combine, figsize, extension,
 	save_path = plots_dir+title.replace(" ","_") + suffix + extension
 	plt.savefig(str(save_path), bbox_inches = "tight")
 
-def load_(name):
-	all_a_star_a_hat = np.load("data/"+ name +"__a_star_a_hat.npy")
-	all_regret_expected = np.load("data/"+ name +"__regret_expected.npy")
-	all_regret_observed = np.load("data/"+ name +"__regret_observed.npy")
-	all_frac_incorrect = np.load("data/"+ name +"__frac_incorrect.npy")
-	all_frac_correct  = np.load("data/"+ name +"__frac_correct.npy")
+def load_(name, save_dir = "data/"):
+	all_a_star_a_hat = np.load(save_dir + name +"__a_star_a_hat.npy")
+	all_regret_expected = np.load(save_dir + name +"__regret_expected.npy")
+	all_regret_observed = np.load(save_dir + name +"__regret_observed.npy")
+	all_frac_incorrect = np.load(save_dir + name +"__frac_incorrect.npy")
+	all_frac_correct  = np.load(save_dir + name +"__frac_correct.npy")
 
 	return all_a_star_a_hat, all_frac_incorrect, all_frac_correct, all_regret_expected, all_regret_observed
 
+def get_model2bin_weekly_dose2data(save_dir):
+    model2bin_weekly_dose2data = dict()
+    for file in os.listdir(save_dir):
+        file2 = file.split(".npy")[0]
+        name = "__".join(file2.split("__")[:-1])
+        if len(name) > 0:
+            model = name.split("model=")[1].split("__")[0]
+            bin_weekly_dose = name.split("bin_weekly_dose=")[1].split("__")[0]
+
+            if model in model2bin_weekly_dose2data:
+                model2bin_weekly_dose2data[model][bin_weekly_dose] = load_(name, save_dir)
+            else:
+                model2bin_weekly_dose2data[model] = {bin_weekly_dose: load_(name, save_dir)}
+    return model2bin_weekly_dose2data
 
 if __name__ == "__main__":
 	# Plotting Parameters
