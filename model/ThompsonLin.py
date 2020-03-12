@@ -6,8 +6,8 @@ from loader.warfarin_loader import bin_weekly_dose_val
 
 
 class ThompsonNet(Model):
-	def __init__(self, bin_weekly_dose, num_actions=3, R=0.5, delta=0.1, epsilon=1.0/np.log(1000), num_force=0.0, feature_group=0):
-		super().__init__(bin_weekly_dose, feature_group)
+	def __init__(self, bin_weekly_dose, num_actions=3, R=0.5, delta=0.1, epsilon=1.0/np.log(1000), num_force=0.0, feature_group=0, impute_VKORC1 = True):
+		super().__init__(bin_weekly_dose = bin_weekly_dose, feature_group = feature_group, impute_VKORC1 = impute_VKORC1)
 		#self.feature_columns = ["Age in decades", "Height in cm", "Weight in kg", "VKORC1 A/G", "VKORC1 A/A", "VKORC1 genotype unknown", "CYP2C9 *1/*2", "CYP2C9 *1/*3", "CYP2C9*2/*2", "CYP2C9*2/*3", "CYP2C9*3/*3", "CYP2C9 genotype unknown", "Asian race", "Black or African American", "Missing or Mixed race", "Enzyme inducer status", "Amiodarone status"]
 
 		self.dim = len(self.feature_columns) +1

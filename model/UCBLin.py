@@ -3,11 +3,9 @@ from model.model import Model
 import pandas as pd
 from loader.warfarin_loader import bin_weekly_dose_val
 
-
-
 class UCBNet( Model):
-	def __init__(self, bin_weekly_dose, num_actions=3, bound_constant=2.0, num_force=1.0, feature_group=0):
-		super().__init__(bin_weekly_dose, feature_group)
+	def __init__(self, bin_weekly_dose, num_actions=3, bound_constant=2.0, num_force=1.0, feature_group=0, impute_VKORC1 = True):
+		super().__init__(bin_weekly_dose = bin_weekly_dose, feature_group = feature_group, impute_VKORC1 = impute_VKORC1)
 		#self.feature_columns = ["Age in decades", "Height in cm", "Weight in kg", "VKORC1 A/G", "VKORC1 A/A", "VKORC1 genotype unknown", "CYP2C9 *1/*2", "CYP2C9 *1/*3", "CYP2C9*2/*2", "CYP2C9*2/*3", "CYP2C9*3/*3", "CYP2C9 genotype unknown", "Asian race", "Black or African American", "Missing or Mixed race", "Enzyme inducer status", "Amiodarone status"]
 
 		self.dim = len(self.feature_columns) + 1
@@ -19,7 +17,6 @@ class UCBNet( Model):
 		self.b = np.zeros((self.dim*self.num_actions,1))
 		self.counts = np.zeros((self.num_actions))
 		self.num_force = num_force
-
 
 	# def set_X(self, X):
 	# 	# nan_ = np.isnan(X).astype(float)
@@ -33,7 +30,6 @@ class UCBNet( Model):
 	# 	# 	X[:,i] = np.where(np.isnan(X[:,i]), 0.0, X[:,i]) 
 
 	# 	self.X = np.insert(X, 0, 1, axis=1)
-		
 
 	def predict(self, x, y):
 		x = np.append(x, 1.0) 
@@ -55,16 +51,12 @@ class UCBNet( Model):
 		y_hat = r_estimates[a]
 		self.train(x, y, a, y_hat)
 		return self.return_binner(a, y_hat)
-			
 
 	def train(self, x, y, a, y_hat):
 		x_a = np.outer(self.actions[a], x).flatten()
 		x_a = np.expand_dims(x_a, axis=1).astype(float)
 		self.A += np.matmul(x_a, x_a.T)
 		self.b += self.reward(y, a, y_hat)*x_a
-
-	
-
 
 class UCBDNet(Model):
 	def __init__(self, bin_weekly_dose, num_actions=3, bound_constant=2.0, num_force=1.0, feature_group=0):
@@ -83,10 +75,8 @@ class UCBDNet(Model):
 			self.A.append(np.identity(self.dim, dtype=float))
 			self.b.append(np.zeros((self.dim,1)))
 
-
 	# def set_X(self, X):
 	# 	self.X = np.insert(X, 0, 1, axis=1)
-
 
 	def predict(self, x, y):
 		x = np.append(x, 1.0) 
@@ -108,9 +98,6 @@ class UCBDNet(Model):
 		self.train(x, y, a, y_hat)
 		return self.return_binner(a, y_hat)
 
-
 	def train(self, x, y, a, y_hat):
 		self.A[a] += np.matmul(x, x.T) 
 		self.b[a] += self.reward(y, a, y_hat)*x
-
-

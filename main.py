@@ -17,15 +17,11 @@ import scipy.stats as stats
 from scipy.stats.stats import pearsonr
 import sys
 
-
-import matplotlib; matplotlib.use('TkAgg')
+# import matplotlib; matplotlib.use('TkAgg')
 #import matplotlib; matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
-
-
-
 
 def plot_combined(scalar_results):
 	points = defaultdict(list)
@@ -67,6 +63,8 @@ def parse_args():
 	parser.add_argument('--e_scale', type=float, nargs = "?", default=1.0)
 	parser.add_argument('--feature_group', type=int, nargs = "?", default=0)
 	parser.add_argument("--nan_val_0", type=str2bool, nargs='?', const=True, default=False, help="Activate nan replaced to 0 mode.")
+	parser.add_argument('--impute_VKORC1', type = str2bool, nargs='?', const = True, default = True)
+	parser.add_argument('--fill_na_height_weight_with_mean', type = str2bool, nargs='?', const = True, default = True)
 
 	args = parser.parse_args()
 	return args
@@ -74,23 +72,23 @@ def parse_args():
 def get_model(args):
 		# Instantiate model
 	if args.model == "fixed_dose":
-			model = FixedDose(bin_weekly_dose=args.bin_weekly_dose)
+			model = FixedDose(bin_weekly_dose=args.bin_weekly_dose, impute_VKORC1 = args.impute_VKORC1)
 	elif args.model == "wpda":
-			model = WPDA(bin_weekly_dose=args.bin_weekly_dose)
+			model = WPDA(bin_weekly_dose=args.bin_weekly_dose, impute_VKORC1 = args.impute_VKORC1)
 	elif args.model == "wcda":
-			model = WCDA(bin_weekly_dose=args.bin_weekly_dose)
+			model = WCDA(bin_weekly_dose=args.bin_weekly_dose, impute_VKORC1 = args.impute_VKORC1)
 	elif args.model == "UCBNet":
-			model = UCBNet(bin_weekly_dose=args.bin_weekly_dose, num_actions=args.bin_weekly_dose, bound_constant=args.bound_constant, num_force=args.num_force, feature_group=args.feature_group)
+			model = UCBNet(bin_weekly_dose=args.bin_weekly_dose, num_actions=args.bin_weekly_dose, bound_constant=args.bound_constant, num_force=args.num_force, feature_group=args.feature_group, impute_VKORC1 = args.impute_VKORC1)
 	elif args.model == "UCBDNet":
-			model = UCBDNet(bin_weekly_dose=args.bin_weekly_dose, num_actions=args.bin_weekly_dose, bound_constant=args.bound_constant, num_force=args.num_force, feature_group=args.feature_group)
+			model = UCBDNet(bin_weekly_dose=args.bin_weekly_dose, num_actions=args.bin_weekly_dose, bound_constant=args.bound_constant, num_force=args.num_force, feature_group=args.feature_group, impute_VKORC1 = args.impute_VKORC1)
 	elif args.model == "ThompsonNet":
-			model = ThompsonNet(bin_weekly_dose=args.bin_weekly_dose, num_actions=args.bin_weekly_dose, R=args.R, delta=0.1, epsilon=1.0/np.log(1000), num_force=args.num_force_TH, feature_group=args.feature_group)
+			model = ThompsonNet(bin_weekly_dose=args.bin_weekly_dose, num_actions=args.bin_weekly_dose, R=args.R, delta=0.1, epsilon=1.0/np.log(1000), num_force=args.num_force_TH, feature_group=args.feature_group, impute_VKORC1 = args.impute_VKORC1)
 	elif args.model == "ThompsonDNet":
-			model = ThompsonDNet(bin_weekly_dose=args.bin_weekly_dose, num_actions=args.bin_weekly_dose, R=args.R, delta=0.1, epsilon=1.0/np.log(1000), num_force=args.num_force_TH, feature_group=args.feature_group)
+			model = ThompsonDNet(bin_weekly_dose=args.bin_weekly_dose, num_actions=args.bin_weekly_dose, R=args.R, delta=0.1, epsilon=1.0/np.log(1000), num_force=args.num_force_TH, feature_group=args.feature_group, impute_VKORC1 = args.impute_VKORC1)
 	elif args.model == "eGreedy":
-			model = eGreedy(bin_weekly_dose=args.bin_weekly_dose, num_actions=args.bin_weekly_dose, e_0 = args.e_0, e_scale = args.e_scale, feature_group=args.feature_group)
+			model = eGreedy(bin_weekly_dose=args.bin_weekly_dose, num_actions=args.bin_weekly_dose, e_0 = args.e_0, e_scale = args.e_scale, feature_group=args.feature_group, impute_VKORC1 = args.impute_VKORC1)
 	elif args.model == "eGreedyD":
-			model = eGreedyD(bin_weekly_dose=args.bin_weekly_dose, num_actions=args.bin_weekly_dose, e_0 = args.e_0, e_scale = args.e_scale, feature_group=args.feature_group)
+			model = eGreedyD(bin_weekly_dose=args.bin_weekly_dose, num_actions=args.bin_weekly_dose, e_0 = args.e_0, e_scale = args.e_scale, feature_group=args.feature_group, impute_VKORC1 = args.impute_VKORC1)
 	else:
 		assert(False)
 
@@ -108,8 +106,7 @@ if __name__ == "__main__":
 	if args.nan_val_0:
 		wf = WarfarinLoader(na_val=0.0,fill_na_mean=False,stable_dose_only=True)
 	else: 
-		wf = WarfarinLoader(na_val=np.nan,fill_na_mean=False,stable_dose_only=True)
-
+		wf = WarfarinLoader(na_val=np.nan,fill_na_mean=args.fill_na_height_weight_with_mean,stable_dose_only=True)
 	
 	all_a_star_a_hat = []
 	all_regret_expected,all_regret_observed, all_frac_incorrect, all_frac_correct = [],[],[],[]
@@ -141,21 +138,18 @@ if __name__ == "__main__":
 	avg_regret_expected = np.mean(np.array(all_regret_expected), axis=0)
 	avg_regret_observed = np.mean(np.array(all_regret_observed), axis=0)
 
-
 	print (name)
-	# print (args.model, "Averaged Frac-Incorrect / Final Regret expected / Final Regret observed ", avg_frac_incorrect[-1], avg_regret_expected[-1], avg_regret_observed[-1])
-	# plot_combined(all_frac_incorrect)
-	# plot_combined(all_regret_expected)
-	# plot_combined(all_regret_observed)
-
-
+	print (args.model, "Averaged Frac-Incorrect / Final Regret expected / Final Regret observed ", avg_frac_incorrect[-1], avg_regret_expected[-1], avg_regret_observed[-1])
+	plot_combined(all_frac_incorrect)
+	plot_combined(all_regret_expected)
+	plot_combined(all_regret_observed)
 
 	#Code for adams plotting functions
-	np.save("/dfs/scratch1/caruiz/CS234/" + name+"__a_star_a_hat",all_a_star_a_hat)
-	np.save("/dfs/scratch1/caruiz/CS234/" + name+"__regret_expected",all_regret_expected)
-	np.save("/dfs/scratch1/caruiz/CS234/" + name+"__regret_observed",all_regret_observed)
-	np.save("/dfs/scratch1/caruiz/CS234/" + name+"__frac_incorrect",all_frac_incorrect)
-	np.save("/dfs/scratch1/caruiz/CS234/" + name+"__frac_correct",all_frac_correct)
+	# np.save("/dfs/scratch1/caruiz/CS234/" + name+"__a_star_a_hat",all_a_star_a_hat)
+	# np.save("/dfs/scratch1/caruiz/CS234/" + name+"__regret_expected",all_regret_expected)
+	# np.save("/dfs/scratch1/caruiz/CS234/" + name+"__regret_observed",all_regret_observed)
+	# np.save("/dfs/scratch1/caruiz/CS234/" + name+"__frac_incorrect",all_frac_incorrect)
+	# np.save("/dfs/scratch1/caruiz/CS234/" + name+"__frac_correct",all_frac_correct)
 
 
 	#plot_combined(all_frac_incorrect)
@@ -170,15 +164,3 @@ if __name__ == "__main__":
 	plt.ylabel("Cumulative Regret")
 	plt.show()
 	"""
-
-
-
-
-
-
-
-
-
-
-
-

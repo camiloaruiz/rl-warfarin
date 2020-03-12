@@ -5,8 +5,8 @@ from loader.warfarin_loader import bin_weekly_dose_val, bin_weekly_dose_val_2, b
 
 
 class FixedDose(Model):
-	def __init__(self, bin_weekly_dose, feature_group=0):
-		super().__init__(bin_weekly_dose)
+	def __init__(self, bin_weekly_dose, feature_group=0, impute_VKORC1 = True):
+		super().__init__(bin_weekly_dose = bin_weekly_dose, feature_group = feature_group, impute_VKORC1 = impute_VKORC1)
 		#self.feature_columns = []
 
 #	def featurize(self, wf):

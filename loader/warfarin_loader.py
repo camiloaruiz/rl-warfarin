@@ -1,6 +1,50 @@
 import pandas as pd
 import numpy as np
 
+def impute_VKORC1_helper(row):
+	VKORC1_1639 = 'VKORC1 -1639 consensus'
+	vkorc1_1639_consensus = row[VKORC1_1639]
+
+	if not(pd.isnull(vkorc1_1639_consensus)) and (vkorc1_1639_consensus != "na"):
+		return vkorc1_1639_consensus
+	else:
+		race = row['Race']
+		rs2359612 = row['VKORC1 2255 consensus']
+		rs9934438 = row['VKORC1 1173 consensus']
+		rs8050894 = row['VKORC1 1542 consensus']
+
+		baa = 'Black or African American'
+		unk = 'Unknown'
+
+		GG = 'G/G'
+		AA = 'A/A'
+		AG = 'A/G'
+		CC = 'C/C'
+		TT = 'T/T'
+		CT = 'C/T'
+		CG = 'C/G'
+
+		if (race not in [baa, unk]) and (rs2359612 == CC):
+			return GG
+		if (race not in [baa, unk]) and (rs2359612 == TT):
+			return AA
+		if (race not in [baa, unk]) and (rs2359612 == CT):
+			return AG
+		if (rs9934438 == CC):
+			return GG
+		if (rs9934438 == TT):
+			return AA
+		if (rs9934438 == CT):
+			return AG
+		if (race not in [baa, unk]) and (rs8050894 == GG):
+			return GG
+		if (race not in [baa, unk]) and (rs8050894 == CC):
+			return AA
+		if (race not in [baa, unk]) and (rs8050894 == CG):
+			return AG
+		else:
+			return "na"
+
 def get_enzyme_inducer_status_helper(row,na_val=np.nan):
 	carbamazepine = row["Carbamazepine (Tegretol)"]
 	phenytoin = row["Phenytoin (Dilantin)"]
@@ -12,9 +56,7 @@ def get_enzyme_inducer_status_helper(row,na_val=np.nan):
 			enzyme_inducer_status = 0
 		else:
 			enzyme_inducer_status = carbamazepine or phenytoin or rifampin
-
 	else:
-
 		if ((carbamazepine == 1) or (phenytoin == 1) or (rifampin == 1)):
 			enzyme_inducer_status = 1
 		else:
@@ -87,20 +129,16 @@ class WarfarinLoader():
 		self.stable_dose_only = stable_dose_only
 
 	def load_raw_data(self):
-		self.raw_df = pd.read_csv(self.file_path, )
+		self.raw_df = pd.read_csv(self.file_path)
 		self.raw_df = self.raw_df.dropna(how = 'all') # Drop rows where all entries are nan
 		self.raw_df = self.raw_df.fillna("na")
 
-	def impute(self):
-		raise NotImplementedError
-
+	def impute_VKORC1(self):
+		self.raw_df['VKORC1 -1639 consensus'] = self.raw_df.apply(lambda row: impute_VKORC1_helper(row), axis = 1)
 
 	def binarize_feature(self, col, map_dict):
 		assert(np.nansum(list(map_dict.values())) == 1) # Should be one hot
 		return self.raw_df[col].apply(lambda genotype: map_dict[genotype])
-
-
-
 
 	def get_is_male(self):
 		return self.binarize_feature("Gender", {'male': 1, 'female': 0,'na':self.na_val})
@@ -114,26 +152,25 @@ class WarfarinLoader():
 	def get_age_in_decades(self):
 		age2decade = {'10 - 19': 1, '20 - 29': 2, '30 - 39': 3, '40 - 49': 4, '50 - 59': 5, '60 - 69': 6, '70 - 79': 7, '80 - 89': 8, '90+': 9, 'na': np.nan}
 		age_in_decades = self.raw_df["Age"].apply(lambda age: age2decade[age])
-		if not self.fill_na_mean: return age_in_decades
-		mean = np.nanmean(age_in_decades)
-		#print("mean age",mean)
-		return age_in_decades.replace(np.nan,mean)
+		return age_in_decades
 
 	def get_height_in_cm(self):
 		height_in_cm = self.raw_df["Height (cm)"].replace("na",np.nan)
-		if not self.fill_na_mean: return height_in_cm
-		mean = np.nanmean(height_in_cm)
-		#print("mean height",mean)
-		return height_in_cm.replace(np.nan,mean)
+		if not self.fill_na_mean:
+			return height_in_cm
+		else:
+			mean = np.nanmean(height_in_cm)
+			#print("mean height",mean)
+			return height_in_cm.replace(np.nan,mean)
 
 	def get_weight_in_kg(self):
 		weight_in_kg = self.raw_df["Weight (kg)"].replace("na",np.nan)
-		if not self.fill_na_mean: return weight_in_kg
-		mean = np.nanmean(weight_in_kg)
-		#print("mean weight",mean)
-		return weight_in_kg.replace(np.nan,mean)
-
-
+		if not self.fill_na_mean:
+			return weight_in_kg
+		else:
+			mean = np.nanmean(weight_in_kg)
+			#print("mean weight",mean)
+			return weight_in_kg.replace(np.nan,mean)
 
 	def get_diabetes(self):
 		return self.binarize_feature("Diabetes", {"na": self.na_val, 1.: 1, 0.: 0})
@@ -153,41 +190,41 @@ class WarfarinLoader():
 	def get_smoker(self):
 		return self.binarize_feature("Current Smoker", {"na": self.na_val, 1.: 1, 0.: 0})
 
-
-
 	def get_VKORC1_497_GT(self):
 		return self.binarize_feature("VKORC1 497 consensus", {"G/T": 1, "T/T": 0, "G/G":0 ,"na": self.na_val})
+
 	def get_VKORC1_497_TT(self):
 		return self.binarize_feature("VKORC1 497 consensus", {"G/T": 0, "T/T": 1, "G/G":0 ,"na": self.na_val})
+
 	def get_VKORC1_497_GG(self):
 		return self.binarize_feature("VKORC1 497 consensus", {"G/T": 0, "T/T": 0, "G/G":1 ,"na": self.na_val})
 
 	def get_VKORC1_497_unknown(self):
 		return self.binarize_feature("VKORC1 497 consensus", {"G/T": 0, "T/T": 0, "G/G":0 ,"na": 1})
 
-
 	def get_VKORC1_1542_CC(self):
 		return self.binarize_feature("VKORC1 1542 consensus", {"C/C": 1, "C/G": 0, "G/G": 0, "na": self.na_val})
+	
 	def get_VKORC1_1542_CG(self):
 		return self.binarize_feature("VKORC1 1542 consensus", {"C/C": 0, "C/G": 1, "G/G": 0, "na": self.na_val})
+	
 	def get_VKORC1_1542_GG(self):
 		return self.binarize_feature("VKORC1 1542 consensus", {"C/C": 0, "C/G": 0, "G/G": 1, "na": self.na_val})
+	
 	def get_VKORC1_1542_NA(self):
 		return self.binarize_feature("VKORC1 1542 consensus", {"C/C": 0, "C/G": 0, "G/G": 0, "na": 1})
 
-
 	def get_VKORC1_4451_CC(self):
 		return self.binarize_feature("VKORC1 -4451 consensus", {"C/C": 1, "A/C": 0, "A/A": 0,"na": self.na_val})
+	
 	def get_VKORC1_4451_AC(self):
 		return self.binarize_feature("VKORC1 -4451 consensus", {"C/C": 0, "A/C": 1, "A/A": 0,"na": self.na_val})
+	
 	def get_VKORC1_4451_AA(self):
 		return self.binarize_feature("VKORC1 -4451 consensus", {"C/C": 0, "A/C": 0, "A/A": 1, "na": self.na_val})
+	
 	def get_VKORC1_4451_NA(self):
 		return self.binarize_feature("VKORC1 -4451 consensus", {"C/C": 0, "A/C": 0, "A/A": 0,"na": 1})
-
-
-
-
 
 	def get_VKORC1_AG(self):
 		return self.binarize_feature("VKORC1 -1639 consensus", {"A/G": 1, "A/A": 0, "G/G": 0, "na": self.na_val})
@@ -222,8 +259,6 @@ class WarfarinLoader():
 	def get_CYP2C9_genotype_unknown(self):
 		return self.binarize_feature("CYP2C9 consensus", {'*1/*1':0, '*1/*3':0, '*1/*2':0, '*2/*2':0, '*2/*3':0, '*3/*3':0, "na":1, '*1/*5':0, '*1/*13':0, '*1/*14':0, '*1/*11':0, '*1/*6':0})
 
-
-
 	def get_asian_race(self):
 		return self.binarize_feature("Race", {'White':0, 'Unknown':0, 'Black or African American':0, 'Asian':1})
 
@@ -236,17 +271,11 @@ class WarfarinLoader():
 	def get_white_race(self):
 		return self.binarize_feature("Race", {'White':1, 'Unknown':0, 'Black or African American':0, 'Asian':0})
 
-
-
-
-
-
-
 	def get_enzyme_inducer_status(self):
 		return self.raw_df.apply(lambda row: get_enzyme_inducer_status_helper(row,self.na_val), axis = 1)
 
 	def get_amiodarone_status(self):
-		return self.binarize_feature("Amiodarone (Cordarone)", {0.:0, 1.:1., "na":self.na_val})
+		return self.binarize_feature("Amiodarone (Cordarone)", {0.:0, 1.:1., "na":0}) # When amiodarone use was unknown, it was assumed that it was not used
 
 	def get_is_stable_dose(self):
 		return self.binarize_feature("Subject Reached Stable Dose of Warfarin",{0.:0, 1.:1., "na":0.})
@@ -275,18 +304,3 @@ class WarfarinLoader():
 			return weekly.apply(lambda weekly_dose_val: bin_weekly_dose_val_5(weekly_dose_val))
 		else:
 			assert(False)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

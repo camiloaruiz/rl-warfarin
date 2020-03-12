@@ -6,8 +6,8 @@ from loader.warfarin_loader import bin_weekly_dose_val
 
 
 class eGreedy( Model):
-	def __init__(self, bin_weekly_dose, e_0=0.1, e_scale=1.0, num_actions=3, num_force=1.0, feature_group=0):
-		super().__init__(bin_weekly_dose, feature_group)
+	def __init__(self, bin_weekly_dose, e_0=0.1, e_scale=1.0, num_actions=3, num_force=1.0, feature_group=0, impute_VKORC1 = True):
+		super().__init__(bin_weekly_dose = bin_weekly_dose, feature_group = feature_group, impute_VKORC1 = impute_VKORC1)
 		self.e_0 = e_0    #epsilon in the epsilon greedy! must be in range[0,1]
 		self.t = 1.0
 		self.e_scale = e_scale

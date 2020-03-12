@@ -4,8 +4,9 @@ import pandas as pd
 
 
 class Model():
-	def __init__(self, bin_weekly_dose=3, feature_group=0):
+	def __init__(self, bin_weekly_dose=3, feature_group=0, impute_VKORC1=True):
 		self.bin_weekly_dose = bin_weekly_dose
+		self.impute_VKORC1 = impute_VKORC1
 		if (self.bin_weekly_dose>=2):
 			self.out_column = "Binned weekly warfarin dose"
 		else:
@@ -16,7 +17,6 @@ class Model():
 		# these are features sorted by importance from running feature_selection.py
 		#self.feature_columns = ['Weight in kg', 'VKORC1_1542_CC', 'VKORC1 A/A', 'Asian race', 'Height in cm', 'Black or African American', 'Smoker', 'Age in decades', 'CYP2C9 *1/*3', 'VKORC1_497_TT', 'White race', 'Enzyme inducer status', 'VKORC1 A/G', 'VKORC1_1542_CG', 'CYP2C9*2/*3', 'VKORC1_497_GG', 'Diabetes', 'VKORC1_1542_NA', 'Aspirin', 'VKORC1 genotype unknown', 'VKORC1_4451_CC', 'CYP2C9 *1/*2', 'VKORC1_4451_AC', 'Simvastatin', 'VKORC1_497_unknown', 'VKORC1_4451_AA', 'Amiodarone status', 'Congestive Heart Failure', 'CYP2C9 *1/*1', 'VKORC1_4451_NA', 'VKORC1_497_GT', 'Valve replacement', 'CYP2C9*3/*3', 'is Female', 'Missing or Mixed race', 'is Male', 'CYP2C9*2/*2', 'unknown Gender', 'CYP2C9 genotype unknown']
 		
-		
 		if feature_group==0:
 			# wpda
 			self.feature_columns = ["Age in decades", "Height in cm", "Weight in kg", "VKORC1 A/G", "VKORC1 A/A", "VKORC1 genotype unknown", "CYP2C9 *1/*2", "CYP2C9 *1/*3", "CYP2C9*2/*2", "CYP2C9*2/*3", "CYP2C9*3/*3", "CYP2C9 genotype unknown", "Asian race", "Black or African American", "Missing or Mixed race", "Enzyme inducer status", "Amiodarone status"]
@@ -24,15 +24,11 @@ class Model():
 			# almost all of them 
 			self.feature_columns = ['Weight in kg', 'VKORC1 A/G', 'Enzyme inducer status', 'Black or African American', 'VKORC1 G/G', 'VKORC1_497_GT', 'Age in decades', 'CYP2C9 *1/*2', 'Missing or Mixed race', 'VKORC1_1542_CG', 'VKORC1_1542_GG', 'Amiodarone status', 'White race', 'Congestive Heart Failure', 'CYP2C9 *1/*3', 'CYP2C9*2/*3', 'VKORC1_497_GG', 'VKORC1_497_TT', 'Smoker', 'Diabetes', 'VKORC1 A/A', 'Asian race', 'Aspirin', 'CYP2C9 *1/*1', 'Valve replacement', 'CYP2C9*3/*3', 'VKORC1_4451_CC', 'VKORC1_4451_AC', 'Height in cm', 'VKORC1_4451_AA', 'VKORC1_1542_CC', 'CYP2C9*2/*2', 'is Female', 'Simvastatin', 'is Male']				
 
-
-
 	def get_X(self):
 		return self.X
 
-
 	def get_Y(self):
 		return self.Y
-
 
 	def set_X(self, X):
 		X_mean = np.nanmean(X, axis=0)
@@ -42,24 +38,19 @@ class Model():
 
 		self.X = X
 
-
 	def set_Y(self, Y):
 		self.Y = Y
 
-
 	def remove_rows_with_missing_data(self):
 		self.feat_df = self.feat_df.dropna(axis = 'rows')
-
 
 	def prepare_XY(self):
 		self.remove_rows_with_missing_data()
 		self.set_X(self.feat_df[self.feature_columns].values)
 		self.set_Y(self.feat_df[self.out_column].values)
 
-
 	def predict(self, x, y):
 		raise NotImplementedError
-
 
 	def train(self, x, y):
 		raise NotImplementedError
@@ -82,20 +73,18 @@ class Model():
 		else:
 			return a
 
-
 	# y is the binned y value of 0,1,2,etc
 	def get_y_for_action(self,a,y):
 		return (a==y).astype(float) - 1
 
-
 	#returns list of true betas
 	def get_true_Beta(self):
-		# print(self.X.shape)
-		# X = self.X[~np.isnan(self.X).any(axis=1)]
+		# print(self.get_X().shape)
+		# X = self.get_X()[~np.isnan(self.get_X()).any(axis=1)]
 		# print(X.shape)
 
-		X = self.X
-		Y = self.Y
+		X = self.get_X()
+		Y = self.get_Y()
 		betas = []
 		for a in range(self.num_actions):
 			y_a = self.get_y_for_action(a,Y)
@@ -120,9 +109,7 @@ class Model():
 		print("True beta score: ", num_incorrect/count)
 		"""
 		#exit()
-
 		return np.array(betas)
-
 
 	def expected_regret(self, a_star_a_hat):
 		if self.true_beta == None:
@@ -130,9 +117,9 @@ class Model():
 		betas = self.true_beta
 		regret_step = []
 		for i, (a_star, a_hat) in enumerate(a_star_a_hat):
-			rs = [np.dot(self.X[i],betas[j]) for j in range(self.num_actions)]
+			rs = [np.dot(self.get_X()[i],betas[j]) for j in range(self.num_actions)]
 			r = max(rs) - rs[int(a_hat)]
-			# r = np.dot(self.X[i],betas[int(a_star)]) - np.dot(self.X[i],betas[int(a_hat)])
+			# r = np.dot(self.get_X()[i],betas[int(a_star)]) - np.dot(self.get_X()[i],betas[int(a_hat)])
 			regret_step.append(r)
 		return np.cumsum(regret_step)
 
@@ -152,7 +139,6 @@ class Model():
 			r = np.abs(a_star-a_hat)
 			regret_step.append(r)
 		return np.cumsum(regret_step)
-
 
 	def calc_frac_correct(self, a_star_a_hat):
 		frac_incorrect = []
@@ -176,12 +162,10 @@ class Model():
 			# frac_incorrect.append(np.mean(np.abs(np.array(a_star[:i])-np.array(a_hat[:i]))/np.array(a_star[:i])))
 		return frac_incorrect
 
-
-
 	# a_star_a_hat is list of Tuples 
 	# [(a*_1, a^_1), ... ,(a*_i, a^_i), ... ,(a*_T, a^_T)]
 	def experiment(self, rand_seed = 1):
-		X, Y = self.X, self.Y
+		X, Y = self.get_X(), self.get_Y()
 		assert(X.shape[0] == Y.shape[0])
 		data = list(zip(X, Y))
 		random.seed(rand_seed+67958254)
@@ -201,12 +185,6 @@ class Model():
 			a_star_a_hat.append((y, a))
 		return a_star_a_hat
 
-
-
-
-
-
-
 	def featurize(self, wf, remove_nas_before_selecting_columns = True):
 		self.featurize_full(wf)
 		columns = self.feature_columns + [self.out_column]
@@ -214,10 +192,11 @@ class Model():
 		# 	self.remove_rows_with_missing_data() 
 		self.feat_df = self.feat_df[columns]
 
-
-
 	def featurize_full(self, wf):
 		self.feat_df = pd.DataFrame()
+		if (self.impute_VKORC1):
+			wf.impute_VKORC1()
+
 		self.feat_df["is Male"] = wf.get_is_male()
 		self.feat_df["is Female"] = wf.get_is_female()
 		self.feat_df["unknown Gender"] = wf.get_gender_unknown()
@@ -246,7 +225,6 @@ class Model():
 		self.feat_df["VKORC1_4451_AC"] = wf.get_VKORC1_4451_AC()
 		self.feat_df["VKORC1_4451_AA"] = wf.get_VKORC1_4451_AA()
 		self.feat_df["VKORC1_4451_NA"] = wf.get_VKORC1_4451_NA()
-
 
 		self.feat_df["VKORC1 A/G"] = wf.get_VKORC1_AG()
 		self.feat_df["VKORC1 A/A"] = wf.get_VKORC1_AA()
