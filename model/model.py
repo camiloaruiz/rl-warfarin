@@ -78,7 +78,7 @@ class Model():
 		return (a==y).astype(float) - 1
 
 	#returns list of true betas
-	def get_true_Beta(self):
+	def calc_true_Beta(self):
 		# print(self.get_X().shape)
 		# X = self.get_X()[~np.isnan(self.get_X()).any(axis=1)]
 		# print(X.shape)
@@ -111,27 +111,24 @@ class Model():
 		#exit()
 		return np.array(betas)
 
-	def expected_regret(self, a_star_a_hat):
-		if self.true_beta == None:
-			self.true_beta = self.get_true_Beta()
-		betas = self.true_beta
-		regret_step = []
-		for i, (a_star, a_hat) in enumerate(a_star_a_hat):
-			rs = [np.dot(self.get_X()[i],betas[j]) for j in range(self.num_actions)]
-			r = max(rs) - rs[int(a_hat)]
-			# r = np.dot(self.get_X()[i],betas[int(a_star)]) - np.dot(self.get_X()[i],betas[int(a_hat)])
-			regret_step.append(r)
-		return np.cumsum(regret_step)
+	def set_true_Beta(self):
+		self.true_beta = self.calc_true_Beta()
 
-	def observed_regret(self, a_star_a_hat):
-		regret_step = []
-		for i, (a_star, a_hat) in enumerate(a_star_a_hat):
-			if a_star == a_hat:
-				r = 0.0
-			else: 
-				r = 1.0
-			regret_step.append(r)
-		return np.cumsum(regret_step)
+	def get_true_Beta(self):
+		return self.true_beta
+
+	def expected_regret_one_step(self, x, a_hat):
+		betas = self.get_true_Beta()
+		true_reward_estimates = [np.dot(x,betas[j]) for j in range(self.num_actions)]
+		regret_one_step = max(true_reward_estimates) - true_reward_estimates[int(a_hat)]
+		return regret_one_step
+
+	def observed_regret_one_step(self, a_star, a_hat):
+		if a_star == a_hat:
+			observed_regret = 0.0
+		else: 
+			observed_regret = 1.0
+		return observed_regret
 
 	def non_binned_regret(self, a_star_a_hat):
 		regret_step = []
@@ -165,31 +162,39 @@ class Model():
 	# a_star_a_hat is list of Tuples 
 	# [(a*_1, a^_1), ... ,(a*_i, a^_i), ... ,(a*_T, a^_T)]
 	def experiment(self, rand_seed = 1):
+		# Get Data
 		X, Y = self.get_X(), self.get_Y()
-		assert(X.shape[0] == Y.shape[0])
-		data = list(zip(X, Y))
-		random.seed(rand_seed+67958254)
-		random.shuffle(data)
+
+		# Get true betas
+		self.set_true_Beta()
+		
+		# Shuffle data
+		assert(len(X) == len(Y))
+		np.random.seed(rand_seed+67958254)
+		random_order = np.random.permutation(len(X))
+		X = X[random_order]
+		Y = Y[random_order]
+		
+		# Run model
 		a_star_a_hat = []
-		for x, y in data:
+		expected_regret_step_list = []
+		observed_regret_step_list = []
 
-			# if np.any(np.isin(x,np.nan)) or np.any(np.isin(x,'na')):
-			# 	continue
-			# 	x = np.where(x==np.nan, 0, x) 
-			# 	x = np.where(x=='na', 0, x) 
-				
-			# if np.any(np.isin(y,np.nan)) or np.any(np.isin(y,'na')):
-			# 	continue
-
+		# y == a_star
+		for x, y in zip(X, Y): #y is a_star; y_hat is the estimate of reward for the action chosen
 			a = self.predict(x,y)
 			a_star_a_hat.append((y, a))
-		return a_star_a_hat
+			expected_regret_step_list.append(self.expected_regret_one_step(x, a))
+			observed_regret_step_list.append(self.observed_regret_one_step(y, a))
+		
+		cum_expected_regret = np.cumsum(expected_regret_step_list)
+		cum_observed_regret = np.cumsum(observed_regret_step_list)
+
+		return a_star_a_hat, cum_expected_regret, cum_observed_regret
 
 	def featurize(self, wf, remove_nas_before_selecting_columns = True):
 		self.featurize_full(wf)
 		columns = self.feature_columns + [self.out_column]
-		# if remove_nas_before_selecting_columns:
-		# 	self.remove_rows_with_missing_data() 
 		self.feat_df = self.feat_df[columns]
 
 	def featurize_full(self, wf):
@@ -249,5 +254,3 @@ class Model():
 		self.feat_df["Weekly warfarin dose"] = wf.get_weekly_warfarin_dose()
 		if (self.bin_weekly_dose>=2):
 			self.feat_df[self.out_column] = wf.get_binned_weekly_warfarin_dose(self.bin_weekly_dose)
-
-

@@ -16,27 +16,13 @@ from collections import defaultdict
 import scipy.stats as stats
 from scipy.stats.stats import pearsonr
 import sys
+import plot
 
 # import matplotlib; matplotlib.use('TkAgg')
 #import matplotlib; matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
-
-def plot_combined(scalar_results):
-	points = defaultdict(list)
-	for run_results in scalar_results:
-		for step, value in enumerate(run_results):
-			points[step].append(value)
-
-	xs = sorted(points.keys())
-	values = np.array([points[x] for x in xs])
-	ys = np.mean(values, axis=1)
-	yerrs = stats.sem(values, axis=1)
-	plt.fill_between(xs, ys - yerrs, ys + yerrs, alpha=0.25)
-	plt.plot(xs, ys)
-	plt.show()
-
 
 def str2bool(v):
 	if isinstance(v, bool):
@@ -113,26 +99,22 @@ if __name__ == "__main__":
 	for trial in range(args.num_trials):
 		model = get_model(args)
 
-		a_star_a_hat = model.experiment(rand_seed = trial)
-		
+		a_star_a_hat, cum_expected_regret, cum_observed_regret = model.experiment(rand_seed = trial)
+
 		if args.bin_weekly_dose == 1:
-			cum_regret = model.non_binned_regret(a_star_a_hat)
-			regret_observed = cum_regret[:]
+			cum_expected_regret = model.non_binned_regret(a_star_a_hat)
+			cum_observed_regret = cum_expected_regret[:]
 			cum_frac_incorrect = model.non_binned_calc_frac_incorrect(a_star_a_hat)
 			frac_correct = []
 		else:
-			cum_frac_incorrect = model.calc_frac_incorrect(a_star_a_hat)
-			cum_regret = model.expected_regret(a_star_a_hat)		
-			regret_observed = model.observed_regret(a_star_a_hat)
+			cum_frac_incorrect = model.calc_frac_incorrect(a_star_a_hat)		
 			frac_correct = model.calc_frac_correct(a_star_a_hat)
-
 
 		all_a_star_a_hat.append(a_star_a_hat)
 		all_frac_incorrect.append(cum_frac_incorrect)
 		all_frac_correct.append(frac_correct)
-		all_regret_expected.append(cum_regret)
-		all_regret_observed.append(regret_observed)
-
+		all_regret_expected.append(cum_expected_regret)
+		all_regret_observed.append(cum_observed_regret)
 	
 	avg_frac_incorrect = np.mean(np.array(all_frac_incorrect), axis=0)
 	avg_regret_expected = np.mean(np.array(all_regret_expected), axis=0)
@@ -140,9 +122,9 @@ if __name__ == "__main__":
 
 	print (name)
 	print (args.model, "Averaged Frac-Incorrect / Final Regret expected / Final Regret observed ", avg_frac_incorrect[-1], avg_regret_expected[-1], avg_regret_observed[-1])
-	plot_combined(all_frac_incorrect)
-	plot_combined(all_regret_expected)
-	plot_combined(all_regret_observed)
+	plot.plot_combined(all_frac_incorrect, show = True)
+	plot.plot_combined(all_regret_expected, show = True)
+	plot.plot_combined(all_regret_observed, show = True)
 
 	#Code for adams plotting functions
 	# np.save("/dfs/scratch1/caruiz/CS234/" + name+"__a_star_a_hat",all_a_star_a_hat)

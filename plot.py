@@ -117,7 +117,7 @@ name36 = "model=eGreedy__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num
 name37 = "model=ThompsonDNet__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
 
 
-def plot_combined(scalar_results):
+def plot_combined(scalar_results, show = False):
 	points = defaultdict(list)
 	for run_results in scalar_results:
 		for step, value in enumerate(run_results):
@@ -135,7 +135,10 @@ def plot_combined(scalar_results):
 	yerrs = stats.tstd(values, limits = None, axis = 1)
 	plt.fill_between(xs, ys - 1.96*yerrs, ys + 1.96*yerrs, alpha=0.25)
 	
-	plt.plot(xs, ys)	
+	plt.plot(xs, ys)
+
+	if (show):
+		plt.show()
 
 def plot_individually(run_results):
 	xs = [step for step, value in run_results]

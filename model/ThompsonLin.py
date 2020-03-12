@@ -24,11 +24,6 @@ class ThompsonNet(Model):
 		self.counts = np.zeros((self.num_actions))
 		self.num_force = num_force
 
-
-	# def set_X(self, X):
-	# 	self.X = np.insert(X, 0, 1, axis=1)
-
-
 	def predict(self, x, y):
 		x = np.append(x, 1.0) 
 		x.astype(float)
@@ -51,16 +46,12 @@ class ThompsonNet(Model):
 		self.train(x, y, a, y_hat)
 		return self.return_binner(a, y_hat)
 
-
 	def train(self, x, y, a, y_hat):
 		x_a = np.outer(self.actions[a], x).flatten()
 		x_a = np.expand_dims(x_a, axis=1).astype(float)
 		self.B += np.matmul(x_a, x_a.T) 
 		self.f += self.reward(y, a, y_hat)*x_a
 		self.mu = np.matmul(np.linalg.inv(self.B), self.f)
-
-
-
 
 class ThompsonDNet(Model):
 	def __init__(self, bin_weekly_dose, num_actions=3, R=0.5, delta=0.1, epsilon=1.0/np.log(1000), num_force=0.0, feature_group=0):
@@ -85,11 +76,6 @@ class ThompsonDNet(Model):
 		self.counts = np.zeros((self.num_actions))
 		self.num_force = num_force
 
-
-	# def set_X(self, X):
-	# 	self.X = np.insert(X, 0, 1, axis=1)
-
-
 	def predict(self, x, y):
 		x = np.append(x, 1.0) 
 		x.astype(float)
@@ -111,12 +97,8 @@ class ThompsonDNet(Model):
 		self.train(x, y, a, y_hat)
 		return self.return_binner(a, y_hat)
 
-
 	def train(self, x, y, a, y_hat):
 		x.astype(float)
 		self.B[a] += np.matmul(x, x.T) 
 		self.f[a] += self.reward(y, a, y_hat)*x
 		self.mu[a] = np.matmul(np.linalg.inv(self.B[a]), self.f[a])
-
-
-
