@@ -42,7 +42,7 @@ class eGreedy( Model):
 		a = self.e_greedy(a)
 		y_hat = r_estimates[a]
 		self.train(x, y, a, y_hat)
-		return self.return_binner(a, y_hat), y_hat
+		return self.return_binner(a, y_hat)
 			
 
 	def train(self, x, y, a, y_hat):
