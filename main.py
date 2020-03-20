@@ -122,9 +122,9 @@ if __name__ == "__main__":
 
 	print (name)
 	print (args.model, "Averaged Frac-Incorrect / Final Regret expected / Final Regret observed ", avg_frac_incorrect[-1], avg_regret_expected[-1], avg_regret_observed[-1])
-	# plot.plot_combined(all_frac_incorrect, show = True)
-	# plot.plot_combined(all_regret_expected, show = True)
-	# plot.plot_combined(all_regret_observed, show = True)
+	plot.plot_combined(all_frac_incorrect, show = True)
+	plot.plot_combined(all_regret_expected, show = True)
+	plot.plot_combined(all_regret_observed, show = True)
 
 	#Code for adams plotting functions
 	np.save("data/" + name+"__a_star_a_hat",all_a_star_a_hat)
