@@ -147,6 +147,9 @@ def plot_individually(run_results):
 	plt.plot(xs, ys)
 
 def plot(results_list, names, title,xlabel, ylabel, combine, figsize, extension, fontsize, x_major_tick_locator, x_minor_tick_locator, y_major_tick_locator, y_minor_tick_locator, major_tick_len, minor_tick_len, x_lim = None, y_lim = None, plots_dir="plot/"):
+	x_lim = (0,5000)
+	y_lim = None
+
 	fig, ax = plt.subplots(figsize = figsize)
 	# Plot Data
 	for results in results_list:
@@ -189,6 +192,8 @@ def load_(name, save_dir = "data/"):
 	all_regret_observed = np.load(save_dir + name +"__regret_observed.npy")
 	all_frac_incorrect = np.load(save_dir + name +"__frac_incorrect.npy")
 	all_frac_correct  = np.load(save_dir + name +"__frac_correct.npy")
+
+	print(len(all_a_star_a_hat[0]))
 
 	return all_a_star_a_hat, all_frac_incorrect, all_frac_correct, all_regret_expected, all_regret_observed
 
