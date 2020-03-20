@@ -85,7 +85,7 @@ def get_model(args):
 
 if __name__ == "__main__":
 	args = parse_args()
-	name = [str(arg)+"="+str(getattr(args, arg)) for arg in vars(args)]
+	name = [str(arg)+"="+str(getattr(args, arg)) for arg in vars(args) if (str(arg)!="impute_VKORC1" and str(arg)!="fill_na_height_weight_with_mean")]
 	name ="__".join(name)
 
 	# Get data
@@ -122,27 +122,22 @@ if __name__ == "__main__":
 
 	print (name)
 	print (args.model, "Averaged Frac-Incorrect / Final Regret expected / Final Regret observed ", avg_frac_incorrect[-1], avg_regret_expected[-1], avg_regret_observed[-1])
-	plot.plot_combined(all_frac_incorrect, show = True)
-	plot.plot_combined(all_regret_expected, show = True)
-	plot.plot_combined(all_regret_observed, show = True)
+	# plot.plot_combined(all_frac_incorrect, show = True)
+	# plot.plot_combined(all_regret_expected, show = True)
+	# plot.plot_combined(all_regret_observed, show = True)
 
 	#Code for adams plotting functions
-	# np.save("/dfs/scratch1/caruiz/CS234/" + name+"__a_star_a_hat",all_a_star_a_hat)
-	# np.save("/dfs/scratch1/caruiz/CS234/" + name+"__regret_expected",all_regret_expected)
-	# np.save("/dfs/scratch1/caruiz/CS234/" + name+"__regret_observed",all_regret_observed)
-	# np.save("/dfs/scratch1/caruiz/CS234/" + name+"__frac_incorrect",all_frac_incorrect)
-	# np.save("/dfs/scratch1/caruiz/CS234/" + name+"__frac_correct",all_frac_correct)
+	np.save("data/" + name+"__a_star_a_hat",all_a_star_a_hat)
+	np.save("data/" + name+"__regret_expected",all_regret_expected)
+	np.save("data/" + name+"__regret_observed",all_regret_observed)
+	np.save("data/" + name+"__frac_incorrect",all_frac_incorrect)
+	np.save("data/" + name+"__frac_correct",all_frac_correct)
 
 
-	#plot_combined(all_frac_incorrect)
 
-	"""
-	a_star_a_hat = model.experiment(rand_seed = 7)
-	#print(a_star_a_hat)
-	frac_incorrect = model.calc_final_frac_incorrect(a_star_a_hat)
-	print(args.model,"Frac Incorrect= ",frac_incorrect)
-	plt.plot(model.regret_over_time(a_star_a_hat))
-	plt.xlabel("Sample")
-	plt.ylabel("Cumulative Regret")
-	plt.show()
-	"""
+
+
+
+
+
+

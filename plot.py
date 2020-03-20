@@ -24,6 +24,7 @@ import os
 
 # python main.py --model fixed_dose 
 name1 = "model=fixed_dose__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
+
 # python main.py --model wcda 
 name2 ="model=wcda__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
 # python main.py --model wpda 
@@ -212,11 +213,11 @@ if __name__ == "__main__":
 
 	# Initial Plots
 	## Baseline NaN Removed
-	# data = []
-	# names = ["fixed_dose","wcda","wpda"]
-	# for name in [name1, name2, name3]:
-	# 	data.append(load_(name)[2])
-	# plot(results_list=data, names=names, title="Baseline NaN removed", xlabel="patient", ylabel="Frac Correct", combine=True, figsize = plot_params["figsize"], extension = plot_params["extension"], fontsize = plot_params["fontsize"], x_major_tick_locator = plot_params["patient"]["x_major_tick_locator"], x_minor_tick_locator = plot_params["patient"]["x_minor_tick_locator"], y_major_tick_locator = plot_params["frac_incorrect"]["y_major_tick_locator"], y_minor_tick_locator = plot_params["frac_incorrect"]["y_minor_tick_locator"], major_tick_len = plot_params["major_tick_len"], minor_tick_len = plot_params["minor_tick_len"])
+	data = []
+	names = ["fixed_dose","wcda","wpda"]
+	for name in [name1, name2, name3]:
+		data.append(load_(name)[2])
+	plot(results_list=data, names=names, title="Baseline Frac Correct", xlabel="patient", ylabel="Frac Correct", combine=True, figsize = plot_params["figsize"], extension = plot_params["extension"], fontsize = plot_params["fontsize"], x_major_tick_locator = plot_params["patient"]["x_major_tick_locator"], x_minor_tick_locator = plot_params["patient"]["x_minor_tick_locator"], y_major_tick_locator = plot_params["frac_incorrect"]["y_major_tick_locator"], y_minor_tick_locator = plot_params["frac_incorrect"]["y_minor_tick_locator"], major_tick_len = plot_params["major_tick_len"], minor_tick_len = plot_params["minor_tick_len"])
 
 	# ## Baseline NaN Replaced with 0
 	# data = []
@@ -230,7 +231,7 @@ if __name__ == "__main__":
 	names = ["fixed_dose","wcda","wpda","UCBNet","ThompsonNet","eGreedy"]
 	for name in [name1, name2, name3, name7, name8, name9,]:
 		data.append(load_(name)[1])
-	plot(results_list=data, names=names, title="Baseline NaN removed; wpda features", xlabel="patient", ylabel="Frac Incorrect", combine=True, figsize = plot_params["figsize"], extension = plot_params["extension"], fontsize = plot_params["fontsize"], x_major_tick_locator = plot_params["patient"]["x_major_tick_locator"], x_minor_tick_locator = plot_params["patient"]["x_minor_tick_locator"], y_major_tick_locator = plot_params["frac_incorrect"]["y_major_tick_locator"], y_minor_tick_locator = plot_params["frac_incorrect"]["y_minor_tick_locator"], major_tick_len = plot_params["major_tick_len"], minor_tick_len = plot_params["minor_tick_len"], x_lim = (0, 2300), y_lim = (0.26, 0.82))
+	plot(results_list=data, names=names, title="Frac Incorrect", xlabel="patient", ylabel="Frac Incorrect", combine=True, figsize = plot_params["figsize"], extension = plot_params["extension"], fontsize = plot_params["fontsize"], x_major_tick_locator = plot_params["patient"]["x_major_tick_locator"], x_minor_tick_locator = plot_params["patient"]["x_minor_tick_locator"], y_major_tick_locator = plot_params["frac_incorrect"]["y_major_tick_locator"], y_minor_tick_locator = plot_params["frac_incorrect"]["y_minor_tick_locator"], major_tick_len = plot_params["major_tick_len"], minor_tick_len = plot_params["minor_tick_len"], x_lim = (0, 2300), y_lim = (0.26, 0.82))
 
 	# ## Baseline Nan Replaced with 0; WPDA Features
 	# data = []
@@ -255,17 +256,17 @@ if __name__ == "__main__":
 
 	## Baseline NaN removed; WPDA features; Expected Regret
 	data = []
-	names = ["wcda","wpda","UCBNet","ThompsonNet","eGreedy"] # ["fixed_dose","wcda","wpda","UCBNet","ThompsonNet","eGreedy"]
-	for name in [name2, name3, name7, name8, name9,]: # [name1, name2, name3, name7, name8, name9,]
+	names = ["fixed dose", "wcda","wpda","UCBNet","ThompsonNet","eGreedy"] # ["fixed_dose","wcda","wpda","UCBNet","ThompsonNet","eGreedy"]
+	for name in [name1, name2, name3, name7, name8, name9,]: # [name1, name2, name3, name7, name8, name9,]
 		data.append(load_(name)[3])
-	plot(results_list=data, names=names, title="Expected Regret NaN removed; wpda features", xlabel="patient", ylabel="Expected Regret", combine=True, figsize = plot_params["figsize"], extension = plot_params["extension"], fontsize = plot_params["fontsize"], x_major_tick_locator = plot_params["patient"]["x_major_tick_locator"], x_minor_tick_locator = plot_params["patient"]["x_minor_tick_locator"], y_major_tick_locator = plot_params["expected_regret_big"]["y_major_tick_locator"], y_minor_tick_locator = plot_params["expected_regret_big"]["y_minor_tick_locator"], major_tick_len = plot_params["major_tick_len"], minor_tick_len = plot_params["minor_tick_len"], x_lim = (0, 2300), y_lim = (0, 325))
+	plot(results_list=data, names=names, title="Expected Regret", xlabel="patient", ylabel="Expected Regret", combine=True, figsize = plot_params["figsize"], extension = plot_params["extension"], fontsize = plot_params["fontsize"], x_major_tick_locator = plot_params["patient"]["x_major_tick_locator"], x_minor_tick_locator = plot_params["patient"]["x_minor_tick_locator"], y_major_tick_locator = plot_params["expected_regret_big"]["y_major_tick_locator"], y_minor_tick_locator = plot_params["expected_regret_big"]["y_minor_tick_locator"], major_tick_len = plot_params["major_tick_len"], minor_tick_len = plot_params["minor_tick_len"], x_lim = (0, 2300), y_lim = (0, 325))
 
 	## Baseline NaN removed; WPDA features; Oracle Regret
 	data = []
-	names = ["wcda","wpda","UCBNet","ThompsonNet","eGreedy"] # ["fixed_dose","wcda","wpda","UCBNet","ThompsonNet","eGreedy"]
-	for name in [name2, name3, name7, name8, name9,]: # [name1, name2, name3, name7, name8, name9,]
+	names = ["fixed dose", "wcda","wpda","UCBNet","ThompsonNet","eGreedy"] # ["fixed_dose","wcda","wpda","UCBNet","ThompsonNet","eGreedy"]
+	for name in [name1, name2, name3, name7, name8, name9,]: # [name1, name2, name3, name7, name8, name9,]
 		data.append(load_(name)[4])
-	plot(results_list=data, names=names, title="Oracle Regret NaN removed; wpda features", xlabel="patient", ylabel="Oracle Regret", combine=True, figsize = plot_params["figsize"], extension = plot_params["extension"], fontsize = plot_params["fontsize"], x_major_tick_locator = plot_params["patient"]["x_major_tick_locator"], x_minor_tick_locator = plot_params["patient"]["x_minor_tick_locator"], y_major_tick_locator = plot_params["oracle_regret"]["y_major_tick_locator"], y_minor_tick_locator = plot_params["oracle_regret"]["y_minor_tick_locator"], major_tick_len = plot_params["major_tick_len"], minor_tick_len = plot_params["minor_tick_len"], x_lim = (0, 2300), y_lim = (0, 820))
+	plot(results_list=data, names=names, title="Observed Regret", xlabel="patient", ylabel="Observed Regret", combine=True, figsize = plot_params["figsize"], extension = plot_params["extension"], fontsize = plot_params["fontsize"], x_major_tick_locator = plot_params["patient"]["x_major_tick_locator"], x_minor_tick_locator = plot_params["patient"]["x_minor_tick_locator"], y_major_tick_locator = plot_params["oracle_regret"]["y_major_tick_locator"], y_minor_tick_locator = plot_params["oracle_regret"]["y_minor_tick_locator"], major_tick_len = plot_params["major_tick_len"], minor_tick_len = plot_params["minor_tick_len"], x_lim = (0, 2300), y_lim = (0, 820))
 
 	# Hyperparameter sensitivity
 	## Linear Alpha Search
