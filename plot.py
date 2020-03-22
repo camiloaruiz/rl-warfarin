@@ -24,47 +24,48 @@ import os
 
 # python main.py --model fixed_dose 
 name1 = "model=fixed_dose__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
+name1 = "model=fixed_dose__bin_weekly_dose=3__bound_constant=1.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False" 
 
 # python main.py --model wcda 
-name2 ="model=wcda__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
+name2 ="model=wcda__bin_weekly_dose=3__bound_constant=1.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
 # python main.py --model wpda 
-name3 ="model=wpda__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
+name3 ="model=wpda__bin_weekly_dose=3__bound_constant=1.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
 
-# python main.py --model fixed_dose --nan_val_0
-name4 ="model=fixed_dose__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=True"
-# python main.py --model wcda  --nan_val_0
-name5 ="model=wcda__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=True"
-# python main.py --model wpda  --nan_val_0
-name6 ="model=wpda__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=True"
+# # python main.py --model fixed_dose --nan_val_0
+# name4 ="model=fixed_dose__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=True"
+# # python main.py --model wcda  --nan_val_0
+# name5 ="model=wcda__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=True"
+# # python main.py --model wpda  --nan_val_0
+# name6 ="model=wpda__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=True"
 
 
 # python main.py --model UCBNet --bound_constant 1 --feature_group 0
 name7 ="model=UCBNet__bin_weekly_dose=3__bound_constant=1.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
 # python main.py --model ThompsonNet --R 0.0005 --feature_group 0
-name8 ="model=ThompsonNet__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
+name8 ="model=ThompsonNet__bin_weekly_dose=3__bound_constant=1.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
 # python main.py --model eGreedy --e_0 0.1 --e_scale 1.0  --feature_group 0
-name9 ="model=eGreedy__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
+name9 ="model=eGreedy__bin_weekly_dose=3__bound_constant=1.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
 
-# python main.py --model UCBNet --bound_constant 1 --feature_group 0 --nan_val_0
-name10 ="model=UCBNet__bin_weekly_dose=3__bound_constant=1.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=True"
-# python main.py --model ThompsonNet --R 0.0005 --feature_group 0 --nan_val_0
-name11 ="model=ThompsonNet__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=True"
-# python main.py --model eGreedy --e_0 0.1 --e_scale 1.0  --feature_group 0 --nan_val_0
-name12 ="model=eGreedy__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=True"
+# # python main.py --model UCBNet --bound_constant 1 --feature_group 0 --nan_val_0
+# name10 ="model=UCBNet__bin_weekly_dose=3__bound_constant=1.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=True"
+# # python main.py --model ThompsonNet --R 0.0005 --feature_group 0 --nan_val_0
+# name11 ="model=ThompsonNet__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=True"
+# # python main.py --model eGreedy --e_0 0.1 --e_scale 1.0  --feature_group 0 --nan_val_0
+# name12 ="model=eGreedy__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=True"
 
-# python main.py --model UCBNet --bound_constant 1 --feature_group 1
-name13 ="model=UCBNet__bin_weekly_dose=3__bound_constant=1.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=1__nan_val_0=False"
-# python main.py --model ThompsonNet --R 0.0005 --feature_group 1
-name14 ="model=ThompsonNet__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=1__nan_val_0=False"
-# python main.py --model eGreedy --e_0 0.1 --e_scale 1.0  --feature_group 1
-name15 ="model=eGreedy__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=1__nan_val_0=False"
+# # python main.py --model UCBNet --bound_constant 1 --feature_group 1
+# name13 ="model=UCBNet__bin_weekly_dose=3__bound_constant=1.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=1__nan_val_0=False"
+# # python main.py --model ThompsonNet --R 0.0005 --feature_group 1
+# name14 ="model=ThompsonNet__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=1__nan_val_0=False"
+# # python main.py --model eGreedy --e_0 0.1 --e_scale 1.0  --feature_group 1
+# name15 ="model=eGreedy__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=1__nan_val_0=False"
 
-# python main.py --model UCBNet --bound_constant 1 --feature_group 1 --nan_val_0
-name16 ="model=UCBNet__bin_weekly_dose=3__bound_constant=1.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=1__nan_val_0=True"
-# python main.py --model ThompsonNet --R 0.0005 --feature_group 1 --nan_val_0
-name17 ="model=ThompsonNet__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=1__nan_val_0=True"
-# python main.py --model eGreedy --e_0 0.1 --e_scale 1.0  --feature_group 1 --nan_val_0
-name18 ="model=eGreedy__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=1__nan_val_0=True"
+# # python main.py --model UCBNet --bound_constant 1 --feature_group 1 --nan_val_0
+# name16 ="model=UCBNet__bin_weekly_dose=3__bound_constant=1.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=1__nan_val_0=True"
+# # python main.py --model ThompsonNet --R 0.0005 --feature_group 1 --nan_val_0
+# name17 ="model=ThompsonNet__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=1__nan_val_0=True"
+# # python main.py --model eGreedy --e_0 0.1 --e_scale 1.0  --feature_group 1 --nan_val_0
+# name18 ="model=eGreedy__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=1__nan_val_0=True"
 
 
 
@@ -84,34 +85,34 @@ name23 = "model=UCBNet__bin_weekly_dose=3__bound_constant=2.5__num_force=1__num_
 
 
 # python main.py --model ThompsonNet --R 0.05 --feature_group 0
-name24 = "model=ThompsonNet__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.05__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
+name24 = "model=ThompsonNet__bin_weekly_dose=3__bound_constant=1.0__num_force=1__num_force_TH=0__R=0.05__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
 # python main.py --model ThompsonNet --R 0.005 --feature_group 0
-name25 = "model=ThompsonNet__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
+name25 = "model=ThompsonNet__bin_weekly_dose=3__bound_constant=1.0__num_force=1__num_force_TH=0__R=0.005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
 # python main.py --model ThompsonNet --R 0.001 --feature_group 0
-name26 = "model=ThompsonNet__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.001__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
+name26 = "model=ThompsonNet__bin_weekly_dose=3__bound_constant=1.0__num_force=1__num_force_TH=0__R=0.001__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
 # python main.py --model ThompsonNet --R 0.0005 --feature_group 0
-name27 = "model=ThompsonNet__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
+name27 = "model=ThompsonNet__bin_weekly_dose=3__bound_constant=1.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
 # python main.py --model ThompsonNet --R 0.0001 --feature_group 0
-name28 = "model=ThompsonNet__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0001__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
+name28 = "model=ThompsonNet__bin_weekly_dose=3__bound_constant=1.0__num_force=1__num_force_TH=0__R=0.0001__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
 # python main.py --model ThompsonNet --R 0.00005 --feature_group 0
-name29 = "model=ThompsonNet__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=5e-05__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
+name29 = "model=ThompsonNet__bin_weekly_dose=3__bound_constant=1.0__num_force=1__num_force_TH=0__R=5e-05__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
 
 
 
 # python main.py --model eGreedy --e_0 0.1 --e_scale 0  --feature_group 0
-name30 = "model=eGreedy__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=0.0__feature_group=0__nan_val_0=False"
+name30 = "model=eGreedy__bin_weekly_dose=3__bound_constant=1.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=0.0__feature_group=0__nan_val_0=False"
 # python main.py --model eGreedy --e_0 0.1 --e_scale 0.5  --feature_group 0
-name31 = "model=eGreedy__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=0.5__feature_group=0__nan_val_0=False"
+name31 = "model=eGreedy__bin_weekly_dose=3__bound_constant=1.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=0.5__feature_group=0__nan_val_0=False"
 # python main.py --model eGreedy --e_0 0.1 --e_scale 1.0  --feature_group 0
-name32 = "model=eGreedy__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
+name32 = "model=eGreedy__bin_weekly_dose=3__bound_constant=1.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=1.0__feature_group=0__nan_val_0=False"
 # python main.py --model eGreedy --e_0 0.1 --e_scale 2.0  --feature_group 0
-name33 = "model=eGreedy__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=2.0__feature_group=0__nan_val_0=False"
+name33 = "model=eGreedy__bin_weekly_dose=3__bound_constant=1.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.1__e_scale=2.0__feature_group=0__nan_val_0=False"
 # python main.py --model eGreedy --e_0 0.2 --e_scale 0.5  --feature_group 0
-name34 = "model=eGreedy__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.2__e_scale=0.5__feature_group=0__nan_val_0=False"
+name34 = "model=eGreedy__bin_weekly_dose=3__bound_constant=1.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.2__e_scale=0.5__feature_group=0__nan_val_0=False"
 # python main.py --model eGreedy --e_0 0.2 --e_scale 1.0  --feature_group 0
-name35 = "model=eGreedy__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.2__e_scale=1.0__feature_group=0__nan_val_0=False"
+name35 = "model=eGreedy__bin_weekly_dose=3__bound_constant=1.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.2__e_scale=1.0__feature_group=0__nan_val_0=False"
 # python main.py --model eGreedy --e_0 0.2 --e_scale 2.0  --feature_group 0
-name36 = "model=eGreedy__bin_weekly_dose=3__bound_constant=2.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.2__e_scale=2.0__feature_group=0__nan_val_0=False"
+name36 = "model=eGreedy__bin_weekly_dose=3__bound_constant=1.0__num_force=1__num_force_TH=0__R=0.0005__delta=0.1__epsilon=0.14476482730108395__num_trials=20__e_0=0.2__e_scale=2.0__feature_group=0__nan_val_0=False"
 
 
 # python main.py --model ThompsonDNet --R 0.0005 --feature_group 0

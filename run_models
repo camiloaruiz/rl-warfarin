@@ -38,7 +38,7 @@ python main.py --model wpda
 
 
 
-python main.py --model UCBNet --bound_constant 0.5 --feature_group 0
+python main.py --model UCBNet --bound_constant 0.5 --feature_group 0 --impute_VKORC1 True
 python main.py --model UCBNet --bound_constant 1 --feature_group 0
 python main.py --model UCBNet --bound_constant 1.5 --feature_group 0
 python main.py --model UCBNet --bound_constant 2 --feature_group 0
