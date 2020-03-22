@@ -127,17 +127,23 @@ def plot_combined(scalar_results, show = False):
 
 	xs = sorted(points.keys())
 	values = np.array([points[x] for x in xs])
-	ys = np.mean(values, axis=1)
+	y_means = np.mean(values, axis=1)
 	
-	## Prior with standard error of mean
-	# yerrs = stats.sem(values, axis=1)
-	# plt.fill_between(xs, ys - yerrs, ys + yerrs, alpha=0.25)
+	# 95% CI based on t distribution (https://www.statisticshowto.datasciencecentral.com/probability-and-statistics/confidence-interval/)
+	y_stds = stats.tstd(values, limits = None, axis = 1)
+	n_samples = values.shape[1]
+	try:
+		assert(n_samples == 20)
+	except:
+		print("Must update t value based on t distribution table!")
+		print("n_samples: " + str(n_samples))
+		assert(False)
+	t = 2.093 # based on df = 19 and alpha_level = 0.025 
+	ci_95 = t*y_stds/float(np.sqrt(n_samples))
 
-	## Now with standard deviation
-	yerrs = stats.tstd(values, limits = None, axis = 1)
-	plt.fill_between(xs, ys - 1.96*yerrs, ys + 1.96*yerrs, alpha=0.25)
+	plt.fill_between(xs, y_means - ci_95, y_means + ci_95, alpha=0.25)
 	
-	plt.plot(xs, ys)
+	plt.plot(xs, y_means)
 
 	if (show):
 		plt.show()
