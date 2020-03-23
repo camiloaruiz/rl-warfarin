@@ -127,11 +127,11 @@ if __name__ == "__main__":
 	# plot.plot_combined(all_regret_observed, show = True)
 
 	#Code for adams plotting functions
-	np.save("data/" + name+"__a_star_a_hat",all_a_star_a_hat)
-	np.save("data/" + name+"__regret_expected",all_regret_expected)
-	np.save("data/" + name+"__regret_observed",all_regret_observed)
-	np.save("data/" + name+"__frac_incorrect",all_frac_incorrect)
-	np.save("data/" + name+"__frac_correct",all_frac_correct)
+	np.save("/dfs/scratch1/caruiz/CS234/new/" + name+"__a_star_a_hat",all_a_star_a_hat)
+	np.save("/dfs/scratch1/caruiz/CS234/new/" + name+"__regret_expected",all_regret_expected)
+	np.save("/dfs/scratch1/caruiz/CS234/new/" + name+"__regret_observed",all_regret_observed)
+	np.save("/dfs/scratch1/caruiz/CS234/new/" + name+"__frac_incorrect",all_frac_incorrect)
+	np.save("/dfs/scratch1/caruiz/CS234/new/" + name+"__frac_correct",all_frac_correct)
 
 
 
