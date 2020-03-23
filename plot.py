@@ -130,7 +130,9 @@ def plot_combined(scalar_results, show = False):
 	y_means = np.mean(values, axis=1)
 	
 	# 95% CI based on t distribution (https://www.statisticshowto.datasciencecentral.com/probability-and-statistics/confidence-interval/)
-	y_stds = stats.tstd(values, limits = None, axis = 1)
+	y_stds = [] 
+	for i in range(values.shape[0]): 
+		y_stds.append(stats.tstd(values[i]))
 	n_samples = values.shape[1]
 	try:
 		assert(n_samples == 20)
@@ -139,18 +141,17 @@ def plot_combined(scalar_results, show = False):
 		print("n_samples: " + str(n_samples))
 		assert(False)
 	t = 2.093 # based on df = 19 and alpha_level = 0.025 
-	ci_95 = t*y_stds/float(np.sqrt(n_samples))
+	ci_95 = t*np.array(y_stds)/float(np.sqrt(n_samples))
 
+	print('%.3f' % y_means[y_means.shape[0]-1], '%.3f' % ci_95[ci_95.shape[0]-1])
 	plt.fill_between(xs, y_means - ci_95, y_means + ci_95, alpha=0.25)
-	
 	plt.plot(xs, y_means)
-
 	if (show):
 		plt.show()
 
 def plot_individually(run_results):
-	xs = [step for step, value in run_results]
-	ys = [value for step, value in run_results]
+	xs = [step for step, value in enumerate(run_results)]
+	ys = [value for step, value in enumerate(run_results)]
 	plt.plot(xs, ys)
 
 def plot(results_list, names, title,xlabel, ylabel, combine, figsize, extension, fontsize, x_major_tick_locator, x_minor_tick_locator, y_major_tick_locator, y_minor_tick_locator, major_tick_len, minor_tick_len, x_lim = None, y_lim = None, plots_dir="plot/"):
@@ -199,9 +200,7 @@ def load_(name, save_dir = "data/"):
 	all_regret_observed = np.load(save_dir + name +"__regret_observed.npy")
 	all_frac_incorrect = np.load(save_dir + name +"__frac_incorrect.npy")
 	all_frac_correct  = np.load(save_dir + name +"__frac_correct.npy")
-
-	print(len(all_a_star_a_hat[0]))
-
+	# print(len(all_a_star_a_hat[0]))
 	return all_a_star_a_hat, all_frac_incorrect, all_frac_correct, all_regret_expected, all_regret_observed
 
 def get_model2bin_weekly_dose2data(save_dir):
@@ -223,13 +222,13 @@ if __name__ == "__main__":
 	# Plotting Parameters
 	plot_params = {"figsize": (7, 7), "extension": ".pdf", "fontsize": 14, "expected_regret_big": {"y_major_tick_locator": 50, "y_minor_tick_locator": 10}, "expected_regret": {"y_major_tick_locator": 0.1, "y_minor_tick_locator": 0.02}, "oracle_regret": {"y_major_tick_locator": 100, "y_minor_tick_locator": 20}, "frac_incorrect": {"y_major_tick_locator": 0.1, "y_minor_tick_locator": 0.02}, "patient": {"x_major_tick_locator": 500, "x_minor_tick_locator": 100}, "major_tick_len": 10, "minor_tick_len": 5}
 
-	# Initial Plots
-	## Baseline NaN Removed
-	data = []
-	names = ["fixed_dose","wcda","wpda"]
-	for name in [name1, name2, name3]:
-		data.append(load_(name)[2])
-	plot(results_list=data, names=names, title="Baseline Frac Correct", xlabel="patient", ylabel="Frac Correct", combine=True, figsize = plot_params["figsize"], extension = plot_params["extension"], fontsize = plot_params["fontsize"], x_major_tick_locator = plot_params["patient"]["x_major_tick_locator"], x_minor_tick_locator = plot_params["patient"]["x_minor_tick_locator"], y_major_tick_locator = plot_params["frac_incorrect"]["y_major_tick_locator"], y_minor_tick_locator = plot_params["frac_incorrect"]["y_minor_tick_locator"], major_tick_len = plot_params["major_tick_len"], minor_tick_len = plot_params["minor_tick_len"])
+	# # Initial Plots
+	# ## Baseline NaN Removed
+	# data = []
+	# names = ["fixed_dose","wcda","wpda"]
+	# for name in [name1, name2, name3]:
+	# 	data.append(load_(name)[2])
+	# plot(results_list=data, names=names, title="Baseline Frac Correct", xlabel="patient", ylabel="Frac Correct", combine=True, figsize = plot_params["figsize"], extension = plot_params["extension"], fontsize = plot_params["fontsize"], x_major_tick_locator = plot_params["patient"]["x_major_tick_locator"], x_minor_tick_locator = plot_params["patient"]["x_minor_tick_locator"], y_major_tick_locator = plot_params["frac_incorrect"]["y_major_tick_locator"], y_minor_tick_locator = plot_params["frac_incorrect"]["y_minor_tick_locator"], major_tick_len = plot_params["major_tick_len"], minor_tick_len = plot_params["minor_tick_len"])
 
 	# ## Baseline NaN Replaced with 0
 	# data = []
@@ -301,5 +300,10 @@ if __name__ == "__main__":
 	for name in [name30, name31, name32, name33, name34, name35, name36]:
 		data.append(load_(name)[1])
 	plot(results_list=data, names=names, title="eGreedy E and decay rate search", xlabel="patient", ylabel="Expected Regret", combine=True, figsize = plot_params["figsize"], extension = plot_params["extension"], fontsize = plot_params["fontsize"], x_major_tick_locator = plot_params["patient"]["x_major_tick_locator"], x_minor_tick_locator = plot_params["patient"]["x_minor_tick_locator"], y_major_tick_locator = plot_params["expected_regret"]["y_major_tick_locator"], y_minor_tick_locator = plot_params["expected_regret"]["y_minor_tick_locator"], major_tick_len = plot_params["major_tick_len"], minor_tick_len = plot_params["minor_tick_len"], x_lim = (0, 2300), y_lim = (0.3, 0.8))
+
+
+
+
+
 
 	# Multiple Buckets
