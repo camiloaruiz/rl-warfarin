@@ -28,9 +28,9 @@ python main.py --model eGreedyD --e_0 0.1 --e_scale 1.0 --num_trials 3
 
 
 
-python main.py --model fixed_dose 
-python main.py --model wcda 
-python main.py --model wpda 
+python main.py --model fixed_dose --impute_VKORC1 True
+python main.py --model wcda --impute_VKORC1 True
+python main.py --model wpda --impute_VKORC1 True
 
 
 
@@ -39,27 +39,27 @@ python main.py --model wpda
 
 
 python main.py --model UCBNet --bound_constant 0.5 --feature_group 0 --impute_VKORC1 True
-python main.py --model UCBNet --bound_constant 1 --feature_group 0
-python main.py --model UCBNet --bound_constant 1.5 --feature_group 0
-python main.py --model UCBNet --bound_constant 2 --feature_group 0
-python main.py --model UCBNet --bound_constant 2.5 --feature_group 0
+python main.py --model UCBNet --bound_constant 1 --feature_group 0 --impute_VKORC1 True
+python main.py --model UCBNet --bound_constant 1.5 --feature_group 0 --impute_VKORC1 True
+python main.py --model UCBNet --bound_constant 2 --feature_group 0 --impute_VKORC1 True
+python main.py --model UCBNet --bound_constant 2.5 --feature_group 0 --impute_VKORC1 True
 
 
 
-python main.py --model ThompsonNet --R 0.05 --feature_group 0
-python main.py --model ThompsonNet --R 0.005 --feature_group 0
-python main.py --model ThompsonNet --R 0.001 --feature_group 0
-python main.py --model ThompsonNet --R 0.0005 --feature_group 0
-python main.py --model ThompsonNet --R 0.0001 --feature_group 0
-python main.py --model ThompsonNet --R 0.00005 --feature_group 0
+python main.py --model ThompsonNet --R 0.05 --feature_group 0 --impute_VKORC1 True
+python main.py --model ThompsonNet --R 0.005 --feature_group 0 --impute_VKORC1 True
+python main.py --model ThompsonNet --R 0.001 --feature_group 0 --impute_VKORC1 True
+python main.py --model ThompsonNet --R 0.0005 --feature_group 0 --impute_VKORC1 True
+python main.py --model ThompsonNet --R 0.0001 --feature_group 0 --impute_VKORC1 True
+python main.py --model ThompsonNet --R 0.00005 --feature_group 0 --impute_VKORC1 True
 
 
 
-python main.py --model eGreedy --e_0 0.1 --e_scale 0  --feature_group 0
-python main.py --model eGreedy --e_0 0.1 --e_scale 0.5  --feature_group 0
-python main.py --model eGreedy --e_0 0.1 --e_scale 1.0  --feature_group 0
-python main.py --model eGreedy --e_0 0.1 --e_scale 2.0  --feature_group 0
-python main.py --model eGreedy --e_0 0.2 --e_scale 0.5  --feature_group 0
-python main.py --model eGreedy --e_0 0.2 --e_scale 1.0  --feature_group 0
-python main.py --model eGreedy --e_0 0.2 --e_scale 2.0  --feature_group 0
+python main.py --model eGreedy --e_0 0.1 --e_scale 0  --feature_group 0 --impute_VKORC1 True
+python main.py --model eGreedy --e_0 0.1 --e_scale 0.5  --feature_group 0 --impute_VKORC1 True
+python main.py --model eGreedy --e_0 0.1 --e_scale 1.0  --feature_group 0 --impute_VKORC1 True
+python main.py --model eGreedy --e_0 0.1 --e_scale 2.0  --feature_group 0 --impute_VKORC1 True
+python main.py --model eGreedy --e_0 0.2 --e_scale 0.5  --feature_group 0 --impute_VKORC1 True
+python main.py --model eGreedy --e_0 0.2 --e_scale 1.0  --feature_group 0 --impute_VKORC1 True
+python main.py --model eGreedy --e_0 0.2 --e_scale 2.0  --feature_group 0 --impute_VKORC1 True
 
